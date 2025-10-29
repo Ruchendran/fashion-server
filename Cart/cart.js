@@ -41,4 +41,21 @@ cartRoute.get("/list/:userToken",async(req,res,next)=>{
         res.send(resObj)
     }
 });
+cartRoute.get("/place-order/:productId",async(req,res,next)=>{
+    let resObj={
+        status:'',
+        message:''
+    }
+    let orderDetails=await cartModel.findOne({productId:req.params.productId});
+    if(orderDetails){
+        resObj.status=200;
+        resObj.message="All the proucts"
+        res.send({resObj,orderDetails})
+    }
+    else{
+        res.status=400;
+        res.message="Orders are not available."
+        res.send(resObj)
+    }
+})
 module.exports=cartRoute;

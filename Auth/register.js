@@ -34,7 +34,6 @@ registerRoute.post('/register',async(req,res,next)=>{
     }
 });
 registerRoute.post("/login",async(req,res,next)=>{
-    console.log(req.body)
     const getUser=await registerModel.findOne({       
         username:req.body.username,
     })
@@ -43,12 +42,12 @@ registerRoute.post("/login",async(req,res,next)=>{
         status:''
     }
     if(getUser){
-        let parsePas=jwtToken.verify(getUser.password,pasKey)
+        let parsePas=jwtToken.verify(getUser.password,pasKey);
         if(req.body.password==parsePas){
-        resObj.message="Loggged";
-        resObj.status=200
-        resObj.userToken=getUser?._id;
-        resObj.user=getUser?.user;
+            resObj.message="Loggged";
+            resObj.status=200
+            resObj.userToken=getUser?._id;
+            resObj.user=getUser?.user;
         }
         else{
             resObj.message="Password is wrong"

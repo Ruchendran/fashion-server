@@ -8,7 +8,7 @@ orderRoute.post("/append",async(req,res,next)=>{
         message:''
     }
     const uniqueId=req.body.productId;
-    const idAvailOrNotInCart=await orderModel.findOne({id:uniqueId,userId:req.body.userId});
+    const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
     if(!idAvailOrNotInCart){
         let appendObject={productName:req.body.productName,productDes:req.body.productDes,productImg:req.body.productImg,productPrice:req.body.productPrice,productId:req.body.productId,userId:req.body.userId,quantity:req.body.quantity};
         const saveToOrder=await orderModel(appendObject);
@@ -37,6 +37,23 @@ orderRoute.get("/list/:userToken",async(req,res,next)=>{
     else{
         res.status=200;
         res.message="Products are not available."
+        res.send(resObj)
+    }
+});
+orderRoute.get("/:orderId",async(req,res,next)=>{
+    let resObj={
+        status:'',
+        message:''
+    }
+    let orderDetails=await orderModel.findOne({_id:req.params.orderId});
+    if(orderDetails){
+        resObj.status=200;
+        resObj.message="All the proucts"
+        res.send({resObj,orderDetails})
+    }
+    else{
+        res.status=400;
+        res.message="Orders are not available."
         res.send(resObj)
     }
 })
