@@ -1,6 +1,7 @@
 const express=require("express");
 const db=require("./db.js")
 const index=express();
+const port =process.env.PORT || 3000;
 const cors=require("cors");
 index.use(express.json());
 index.use(cors());
@@ -17,6 +18,6 @@ index.use("/products",productRoute);
 index.use("/cart",cartRoute);
 index.use("/order",orderRoute);
 db.getStartDb();
-index.listen(3000,()=>{
+index.listen(port,()=>{
     console.log("Server Has Been Started At 3000 local host");
 });
