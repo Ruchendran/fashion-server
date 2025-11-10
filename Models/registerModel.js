@@ -1,9 +1,9 @@
 const mongoose=require('mongoose');
 const registerData=mongoose.Schema({
-    username:String,
+    userMail:String,
     password:String,
     phone:Number,
-    user:String  
+    userName:String  
 })
 const registerModel=mongoose.model('registerUser',registerData);
 module.exports=registerModel;

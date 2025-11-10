@@ -1,20 +1,22 @@
 const express=require("express");
 const registerRoute=express.Router();
+const nodeMail=require('nodemailer');
 require('dotenv').config();
 const pasKey = process.env.pas_key || 'fashion';
 const registerModel=require("../Models/registerModel");
 const jwtToken=require('jsonwebtoken');
 registerRoute.post('/register',async(req,res,next)=>{
     let findUser= await registerModel.findOne({    
-        username:req.body.username,
+        userMail:req.body.userMail,
         })
+    /// This is for register flow.
     if(!findUser){
         let jwtPas=jwtToken.sign(req.body.password,pasKey);
         let saveObject={
-            username:req.body.username,
+            userMail:req.body.userMail,
             password:jwtPas,
             phone:req.body.phone,
-            user:req.body.user
+            userName:req.body.userName
         }
         let saveVal=new registerModel(saveObject);
         let saveUser=await saveVal.save();
@@ -22,9 +24,30 @@ registerRoute.post('/register',async(req,res,next)=>{
             message:"Successfully added the product data",
             status:200,
             userToken:saveUser?._id
+        };
+        const transporter=nodeMail.createTransport({
+            service:'gmail',
+            auth:{
+                user:'vvruchendran141594@gmail.com',
+                pass:'qkewfqdeojmsuaxh'
+            }
+        });
+        const sendMail={
+            from:'vvruchendran141594@gmail.com',
+            to:req.body.userMail,
+            subject:'product owner',
+            text:"Hii welcome fresh sale."
         }
+        transporter.sendMail(sendMail,(error,info)=>{
+            if(error){
+                console.log(error)
+            }else{
+                 console.log(info)
+            }
+        })
         res.send(resObj);
     }
+    /// This is for login flow.
     else{
         let resObj={
             message:"User Alreaday exist.",
@@ -35,7 +58,7 @@ registerRoute.post('/register',async(req,res,next)=>{
 });
 registerRoute.post("/login",async(req,res,next)=>{
     const getUser=await registerModel.findOne({       
-        username:req.body.username,
+        userMail:req.body.userMail,
     })
     let resObj={
         message:"",
@@ -47,7 +70,7 @@ registerRoute.post("/login",async(req,res,next)=>{
             resObj.message="Loggged";
             resObj.status=200
             resObj.userToken=getUser?._id;
-            resObj.user=getUser?.user;
+            resObj.user=getUser?.userName;
         }
         else{
             resObj.message="Password is wrong"
