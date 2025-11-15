@@ -5,7 +5,7 @@ const cartModel=require("../Models/cartModel.js");
 cartRoute.post("/save",async(req,res,next)=>{
     const uniqueId=req.body._id;
     const getProductData=await productModel.findOne({_id:uniqueId});
-    const idAvailOrNotInCart=await cartModel.findOne({id:uniqueId,userId:req.body.userToken});
+    const idAvailOrNotInCart=await cartModel.findOne({productId:uniqueId,userId:req.body.userToken});
     let resObj={
         status:'',
         message:''
@@ -41,20 +41,20 @@ cartRoute.get("/list/:userToken",async(req,res,next)=>{
         res.send(resObj)
     }
 });
-cartRoute.get("/place-order/:productId",async(req,res,next)=>{
+cartRoute.get("/place-order",async(req,res,next)=>{
     let resObj={
         status:'',
         message:''
     }
-    let orderDetails=await cartModel.findOne({productId:req.params.productId});
+    let orderDetails=await cartModel.findOne({productId:req.query.productId,userId:req.query.userId});
     if(orderDetails){
         resObj.status=200;
         resObj.message="All the proucts"
         res.send({resObj,orderDetails})
     }
     else{
-        res.status=400;
-        res.message="Orders are not available."
+        resObj.status=400;
+        resObj.message="Orders are not available."
         res.send(resObj)
     }
 })

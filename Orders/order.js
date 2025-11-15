@@ -3,14 +3,51 @@ const orderRoute=express.Router();
 const path=require('path');
 const orderModel=require("../Models/orderModel.js");
 orderRoute.post("/append",async(req,res,next)=>{
+    const date=new Date();
+    date.setHours(date.getHours()+5);
+    date.setMinutes(date.getMinutes()+30);
     let resObj={
         status:'',
         message:''
     }
+    let trackerMap='';
+    switch(req.body.village){
+        case 'Ekambarakuppam':
+             trackerMap= ['Satrawada','Karakandapuram','Checkpost','Ekambarakuppam'];
+            break;
+        case 'Pudhupet':
+            trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Pudupet'];
+            break;
+        case 'Chindalpet':
+             trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Chindalpet'];
+             break;
+        case 'Nagari':
+             trackerMap= ['Satrawada','Ekambarakuppam','Pudupet','Nagari'];
+            break;
+       default:
+            trackerMap= ['Home','WestStreet','Mainroad','Satrawada']
+    }
     const uniqueId=req.body.productId;
     const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
+    console.log(new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }))
     if(!idAvailOrNotInCart){
-        let appendObject={productName:req.body.productName,productDes:req.body.productDes,productImg:req.body.productImg,productPrice:req.body.productPrice,productId:req.body.productId,userId:req.body.userId,quantity:req.body.quantity};
+        let appendObject={
+            productName:req.body.productName,
+            productDes:req.body.productDes,
+            productImg:req.body.productImg,
+            productPrice:req.body.productPrice,
+            productId:req.body.productId,
+            userId:req.body.userId,
+            quantity:req.body.quantity,
+            address:req.body.address,
+            pincode:req.body.pincode,
+            village:req.body.village,
+            phone:req.body.phone,
+            payOnDelivery:req.body.payOnDelivery=='Yes'?true:false,
+            orderTime:date,
+            activeTrackingIndex:0,
+            trackerMap:trackerMap
+        };
         const saveToOrder=await orderModel(appendObject);
         saveToOrder.save();
         resObj.status=200;
@@ -28,7 +65,7 @@ orderRoute.get("/list/:userToken",async(req,res,next)=>{
         status:'',
         message:''
     }
-    let getOrderData=await orderModel.find({userId:req.params.userToken});
+    let getOrderData=await orderModel.find({userId:req.params.userToken}).sort({orderTime:1});
     if(getOrderData){
         resObj.status=200;
         resObj.message="All the proucts"
@@ -47,9 +84,19 @@ orderRoute.get("/:orderId",async(req,res,next)=>{
     }
     let orderDetails=await orderModel.findOne({_id:req.params.orderId});
     if(orderDetails){
+        let presentTime=new Date();
+        let calculateOrderTime=((orderDetails.orderTime.getHours()-6)*60+orderDetails.orderTime.getMinutes()+30)
+        let caluculateIndex=(presentTime.getHours()*60+presentTime.getMinutes())-calculateOrderTime;
+        let finalIndex=Math.round(caluculateIndex/5);
+        if(finalIndex<4){
+            orderDetails.activeTrackingIndex=finalIndex;
+        }
+        else{
+            orderDetails.activeTrackingIndex=4;
+        }
         resObj.status=200;
         resObj.message="All the proucts"
-        res.send({resObj,orderDetails})
+        res.status(200).send({resObj,orderDetails})
     }
     else{
         res.status=400;
