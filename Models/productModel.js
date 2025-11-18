@@ -4,8 +4,9 @@ const productDetails=mongoose.Schema({
     productName:String,
     productDes:String,
     productImg:String ,
-    productPrice:String,
-    productFamily:String
+    productPrice:Number,
+    productFamily:String,
+    productRating:Number
 });
 
 const productModel=mongoose.model('product',productDetails);

@@ -12,7 +12,7 @@ const orderModel=mongoose.Schema({
     village:String,
     phone:Number,
     payOnDelivery:Boolean,
-    orderTime:Date,
+    orderTime:String,
     activeTrackingIndex:Number,
     trackerMap:Object
 });

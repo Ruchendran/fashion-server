@@ -6,7 +6,8 @@ const cartDetails=mongoose.Schema({
     productImg:String ,
     productPrice:String,
     productId:String,
-    quantity:Number
+    quantity:Number,
+    productFamily:String
 });
 const cartModel=mongoose.model('cart-details',cartDetails);
 module.exports=cartModel;

@@ -29,7 +29,6 @@ orderRoute.post("/append",async(req,res,next)=>{
     }
     const uniqueId=req.body.productId;
     const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
-    console.log(new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }))
     if(!idAvailOrNotInCart){
         let appendObject={
             productName:req.body.productName,
@@ -44,7 +43,7 @@ orderRoute.post("/append",async(req,res,next)=>{
             village:req.body.village,
             phone:req.body.phone,
             payOnDelivery:req.body.payOnDelivery=='Yes'?true:false,
-            orderTime:date,
+            orderTime:new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             activeTrackingIndex:0,
             trackerMap:trackerMap
         };
@@ -84,16 +83,18 @@ orderRoute.get("/:orderId",async(req,res,next)=>{
     }
     let orderDetails=await orderModel.findOne({_id:req.params.orderId});
     if(orderDetails){
-        let presentTime=new Date();
-        let calculateOrderTime=((orderDetails.orderTime.getHours()-6)*60+orderDetails.orderTime.getMinutes()+30)
-        let caluculateIndex=(presentTime.getHours()*60+presentTime.getMinutes())-calculateOrderTime;
-        let finalIndex=Math.round(caluculateIndex/5);
-        if(finalIndex<4){
-            orderDetails.activeTrackingIndex=finalIndex;
-        }
-        else{
-            orderDetails.activeTrackingIndex=4;
-        }
+        let presentTime=new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+        // let calculateOrderTime=((orderDetails.orderTime.getHours()+5)*60+orderDetails.orderTime.getMinutes()+30)
+        // let caluculateIndex=(presentTime.getHours()*60+presentTime.getMinutes())-calculateOrderTime;
+        // let finalIndex=Math.round(caluculateIndex/30);
+        // console.log(calculateOrderTime,(presentTime.getHours()*60+presentTime.getMinutes()))
+        // if(finalIndex<4){
+        //     orderDetails.activeTrackingIndex=finalIndex;
+        // }
+        // else{
+        //     orderDetails.activeTrackingIndex=4;
+        // }
+        // console.log(presentTime,new Date(orderDetails.orderTime),'ss');
         resObj.status=200;
         resObj.message="All the proucts"
         res.status(200).send({resObj,orderDetails})

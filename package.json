@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Ruchendran/fashion-server#readme",
   "dependencies": {
+    "@google/genai": "^1.29.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

@@ -11,7 +11,7 @@ cartRoute.post("/save",async(req,res,next)=>{
         message:''
     }
     if(!idAvailOrNotInCart){
-        let appendObject={productName:getProductData.productName,productDes:getProductData.productDes,productImg:getProductData.productImg,productPrice:getProductData.productPrice,productId:getProductData._id,userId:req.body.userToken,quantity:req.body.quantity}
+        let appendObject={productName:getProductData.productName,productDes:getProductData.productDes,productImg:getProductData.productImg,productPrice:getProductData.productPrice,productId:getProductData._id,userId:req.body.userToken,quantity:req.body.quantity,productFamily:req.body.productFamily}
         const saveToCart=await cartModel(appendObject);
         saveToCart.save();
         resObj.status=200;
@@ -56,6 +56,16 @@ cartRoute.get("/place-order",async(req,res,next)=>{
         resObj.status=400;
         resObj.message="Orders are not available."
         res.send(resObj)
+    }
+});
+cartRoute.delete("/delete/:productId/:userId",async(req,res,next)=>{
+    console.log(req.params.productId,"sss");
+    let delFromCart=await cartModel.deleteOne({productId:req.params.productId,userId:req.params.userId});
+    if(delFromCart.acknowledged){
+        res.status(200).send({message:"Successfullly deleted!"});
+    }
+    else{
+        res.status(400).send({message:"Cart details not found."});
     }
 })
 module.exports=cartRoute;

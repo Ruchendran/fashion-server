@@ -25,26 +25,26 @@ registerRoute.post('/register',async(req,res,next)=>{
             status:200,
             userToken:saveUser?._id
         };
-        const transporter=nodeMail.createTransport({
-            service:'gmail',
-            auth:{
-                user:'vvruchendran141594@gmail.com',
-                pass:'qkewfqdeojmsuaxh'
-            }
-        });
-        const sendMail={
-            from:'vvruchendran141594@gmail.com',
-            to:req.body.userMail,
-            subject:'product owner',
-            text:"Hii welcome fresh sale."
-        }
-        transporter.sendMail(sendMail,(error,info)=>{
-            if(error){
-                console.log(error)
-            }else{
-                 console.log(info)
-            }
-        })
+        // const transporter=nodeMail.createTransport({
+        //     service:'gmail',
+        //     auth:{
+        //         user:'vvruchendran141594@gmail.com',
+        //         pass:'qkewfqdeojmsuaxh'
+        //     }
+        // });
+        // const sendMail={
+        //     from:'vvruchendran141594@gmail.com',
+        //     to:req.body.userMail,
+        //     subject:'product owner',
+        //     text:"Hii welcome fresh sale."
+        // }
+        // transporter.sendMail(sendMail,(error,info)=>{
+        //     if(error){
+        //         console.log(error)
+        //     }else{
+        //          console.log(info,"hiii")
+        //     }
+        // })
         res.send(resObj);
     }
     /// This is for login flow.
