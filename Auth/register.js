@@ -28,8 +28,8 @@ registerRoute.post('/register',async(req,res,next)=>{
         const transporter=nodeMail.createTransport({
             service:'gmail',
             auth:{
-                user:'vvruchendran141594@gmail.com',
-                pass:'qkewfqdeojmsuaxh'
+                user:process.env.MAIL_USER ||'vvruchendran141594@gmail.com' ,
+                pass:process.env.MAIL_KEY ||'qkewfqdeojmsuaxh'
             }
         });
         const sendMail={
