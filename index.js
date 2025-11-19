@@ -14,27 +14,14 @@ const registerRoute=require(path.join(__dirname,'Auth','register.js'));
 const productRoute=require(path.join(__dirname,'Products','product.js'));
 const cartRoute=require(path.join(__dirname,'Cart','cart.js'));
 const orderRoute=require(path.join(__dirname,'Orders','order.js'));
+const chatbotRoute=require(path.join(__dirname,'Chatbot','chatbot.js'))
 
-// const {GoogleGenAI} =require('@google/genai');
-// const GEMINI_API_KEY =  process.env.GEMINI_API_KEY
-// console.log("sss",GEMINI_API_KEY)
-// const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
-
-
-// async function main() {
-//   const response = await ai.models.generateContent({
-//     model: 'gemini-2.5-flash',
-//     contents: 'Why is the sky blue?',
-//   });
-//   console.log(response.text);
-// }
-
-// main();
 index.use("/admin",adminRoute);
 index.use("/auth",registerRoute);
 index.use("/products",productRoute);
 index.use("/cart",cartRoute);
 index.use("/order",orderRoute);
+index.use("/chatbot",chatbotRoute)
 db.getStartDb();
 index.listen(port,()=>{
     console.log("Server Has Been Started At 3000 local host");
