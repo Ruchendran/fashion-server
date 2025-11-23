@@ -38,13 +38,13 @@ registerRoute.post('/register',async(req,res,next)=>{
             subject:'product owner',
             text:"Hii welcome fresh sale."
         }
-        transporter.sendMail(sendMail,(error,info)=>{
-            if(error){
-                console.log(error)
-            }else{
-                 console.log(info,"hiii")
-            }
-        })
+        // transporter.sendMail(sendMail,(error,info)=>{
+        //     if(error){
+        //         console.log(error)
+        //     }else{
+        //          console.log(info,"hiii")
+        //     }
+        // })
         res.send(resObj);
     }
     /// This is for login flow.

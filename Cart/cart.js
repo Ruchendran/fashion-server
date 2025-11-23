@@ -67,5 +67,9 @@ cartRoute.delete("/delete/:productId/:userId",async(req,res,next)=>{
     else{
         res.status(400).send({message:"Cart details not found."});
     }
+});
+cartRoute.get("/cart-count",async(req,res,next)=>{
+    const cartCount=await cartModel.find({});
+    res.status(200).send({cartCount:cartCount.length});
 })
 module.exports=cartRoute;
