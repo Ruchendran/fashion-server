@@ -69,7 +69,7 @@ cartRoute.delete("/delete/:productId/:userId",async(req,res,next)=>{
     }
 });
 cartRoute.get("/cart-count",async(req,res,next)=>{
-    const cartCount=await cartModel.find({});
+    const cartCount=await cartModel.find({userId:req.query.userToken});
     res.status(200).send({cartCount:cartCount.length});
 })
 module.exports=cartRoute;

@@ -2,6 +2,10 @@ const express=require('express');
 const orderRoute=express.Router();
 const path=require('path');
 const orderModel=require("../Models/orderModel.js");
+orderRoute.get("/order-count",async(req,res,next)=>{
+    const orderNo=await orderModel.find();
+    res.status(200).send({orderCount:orderNo.length})
+})
 orderRoute.post("/append",async(req,res,next)=>{
     const date=new Date();
     date.setHours(date.getHours()+5);
@@ -104,5 +108,5 @@ orderRoute.get("/:orderId",async(req,res,next)=>{
         res.message="Orders are not available."
         res.send(resObj)
     }
-})
+});
 module.exports=orderRoute;
