@@ -3,7 +3,7 @@ const orderRoute=express.Router();
 const path=require('path');
 const orderModel=require("../Models/orderModel.js");
 orderRoute.get("/order-count",async(req,res,next)=>{
-    const orderNo=await orderModel.find();
+    const orderNo=await orderModel.find({userId:req.query.userToken});
     res.status(200).send({orderCount:orderNo.length})
 })
 orderRoute.post("/append",async(req,res,next)=>{
