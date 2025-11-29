@@ -9,7 +9,7 @@ productRoute.get("/filterPrice",async(req,res,next)=>{
        allProducts =await productModel.find({productPrice:{$lte:req.query.maxPrice ,$gte:req.query.minPrice}});
     }
     else{
-        allProducts=await productModel.find({productPrice:{$lte:req.query.maxPrice ,$gte:req.query.minPrice,productFamily:group}});
+        allProducts=await productModel.find({productPrice:{$lte:req.query.maxPrice ,$gte:req.query.minPrice},productFamily:group});
     }
     res.status(200).send(allProducts);
 })

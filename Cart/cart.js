@@ -59,7 +59,6 @@ cartRoute.get("/place-order",async(req,res,next)=>{
     }
 });
 cartRoute.delete("/delete/:productId/:userId",async(req,res,next)=>{
-    console.log(req.params.productId,"sss");
     let delFromCart=await cartModel.deleteOne({productId:req.params.productId,userId:req.params.userId});
     if(delFromCart.acknowledged){
         res.status(200).send({message:"Successfullly deleted!"});
