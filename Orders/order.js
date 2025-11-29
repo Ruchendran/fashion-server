@@ -14,23 +14,23 @@ orderRoute.post("/append",async(req,res,next)=>{
         status:'',
         message:''
     }
-    let trackerMap='';
-    switch(req.body.village){
-        case 'Ekambarakuppam':
-             trackerMap= ['Satrawada','Karakandapuram','Checkpost','Ekambarakuppam'];
-            break;
-        case 'Pudhupet':
-            trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Pudupet'];
-            break;
-        case 'Chindalpet':
-             trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Chindalpet'];
-             break;
-        case 'Nagari':
-             trackerMap= ['Satrawada','Ekambarakuppam','Pudupet','Nagari'];
-            break;
-       default:
-            trackerMap= ['Home','WestStreet','Mainroad','Satrawada']
-    }
+    let trackerMap=['Satrawada','Godown',req.body.village];
+    // switch(req.body.village){
+    //     case 'Ekambarakuppam':
+    //          trackerMap= ['Satrawada','Karakandapuram','Checkpost','Ekambarakuppam'];
+    //         break;
+    //     case 'Pudhupet':
+    //         trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Pudupet'];
+    //         break;
+    //     case 'Chindalpet':
+    //          trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Chindalpet'];
+    //          break;
+    //     case 'Nagari':
+    //          trackerMap= ['Satrawada','Ekambarakuppam','Pudupet','Nagari'];
+    //         break;
+    //    default:
+    //         trackerMap= ['Home','WestStreet','Mainroad','Satrawada']
+    // }
     const uniqueId=req.body.productId;
     const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
     if(!idAvailOrNotInCart){
