@@ -6,10 +6,9 @@ const pasKey = process.env.pas_key || 'fashion';
 const registerModel=require("../Models/registerModel");
 const jwtToken=require('jsonwebtoken');
 registerRoute.post('/register',async(req,res,next)=>{
-    console.log(process.env.DATE_KEY);
     let findUser= await registerModel.findOne({    
         userMail:req.body.userMail,
-        })
+        })  
     /// This is for register flow.
     if(!findUser){
         let jwtPas=jwtToken.sign(req.body.password,pasKey);
@@ -24,19 +23,18 @@ registerRoute.post('/register',async(req,res,next)=>{
         let resObj={
             message:"Successfully added the product data",
             status:200,
-            userToken:saveUser?._id,
-            dateKey:process.env.key
+            userToken:saveUser?._id
         };
         const transporter=nodeMail.createTransport({
-            port:465,
+            port:process.env.PORT_NO,
             service:'gmail',
             auth:{
-                user:process.env.MAIL_USER ||'vvruchendran141594@gmail.com' ,
-                pass:process.env.MAIL_KEY ||'qkewfqdeojmsuaxh'
+                user:process.env.MAIL_USER ,
+                pass:process.env.MAIL_KEY 
             }
         });
         const sendMail={
-            from:'vvruchendran141594@gmail.com',
+            from:process.env.MAIL_USER,
             to:req.body.userMail,
             subject:'product owner',
             text:"Hii welcome fresh sale."
@@ -47,7 +45,8 @@ registerRoute.post('/register',async(req,res,next)=>{
             }else{
                  console.log(info,"hiii")
             }
-        })
+        });
+        console.log(process.env.MAIL_KEY,"all the vales")
         res.send(resObj);
     }
     /// This is for login flow.
