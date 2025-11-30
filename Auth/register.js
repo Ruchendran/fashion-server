@@ -6,6 +6,7 @@ const pasKey = process.env.pas_key || 'fashion';
 const registerModel=require("../Models/registerModel");
 const jwtToken=require('jsonwebtoken');
 registerRoute.post('/register',async(req,res,next)=>{
+    console.log(process.env.DATE_KEY);
     let findUser= await registerModel.findOne({    
         userMail:req.body.userMail,
         })
@@ -26,6 +27,7 @@ registerRoute.post('/register',async(req,res,next)=>{
             userToken:saveUser?._id
         };
         const transporter=nodeMail.createTransport({
+            port:465,
             service:'gmail',
             auth:{
                 user:process.env.MAIL_USER ||'vvruchendran141594@gmail.com' ,
@@ -38,13 +40,13 @@ registerRoute.post('/register',async(req,res,next)=>{
             subject:'product owner',
             text:"Hii welcome fresh sale."
         }
-        // transporter.sendMail(sendMail,(error,info)=>{
-        //     if(error){
-        //         console.log(error)
-        //     }else{
-        //          console.log(info,"hiii")
-        //     }
-        // })
+        transporter.sendMail(sendMail,(error,info)=>{
+            if(error){
+                console.log(error)
+            }else{
+                 console.log(info,"hiii")
+            }
+        })
         res.send(resObj);
     }
     /// This is for login flow.
