@@ -8,7 +8,7 @@ const jwtToken=require('jsonwebtoken');
 registerRoute.post('/register',async(req,res,next)=>{
     let findUser= await registerModel.findOne({    
         userMail:req.body.userMail,
-        })  
+        })
     /// This is for register flow.
     if(!findUser){
         let jwtPas=jwtToken.sign(req.body.password,pasKey);
@@ -26,29 +26,25 @@ registerRoute.post('/register',async(req,res,next)=>{
             userToken:saveUser?._id
         };
         const transporter=nodeMail.createTransport({
-            host:'smtp.gmail.com',
-            port:process.env.PORT_NO,
             service:'gmail',
             auth:{
-                user:process.env.MAIL_USER ,
-                pass:process.env.MAIL_KEY 
-            },
-            secure:true
+                user:process.env.MAIL_USER ||'vvruchendran141594@gmail.com' ,
+                pass:process.env.MAIL_KEY ||'qkewfqdeojmsuaxh'
+            }
         });
         const sendMail={
-            from:process.env.MAIL_USER,
+            from:'vvruchendran141594@gmail.com',
             to:req.body.userMail,
             subject:'product owner',
             text:"Hii welcome fresh sale."
         }
-        transporter.sendMail(sendMail,(error,info)=>{
-            if(error){
-                console.log(error)
-            }else{
-                 console.log(info,"hiii")
-            }
-        });
-        console.log(process.env.MAIL_KEY,"all the vales")
+        // transporter.sendMail(sendMail,(error,info)=>{
+        //     if(error){
+        //         console.log(error)
+        //     }else{
+        //          console.log(info,"hiii")
+        //     }
+        // })
         res.send(resObj);
     }
     /// This is for login flow.
