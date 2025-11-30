@@ -26,12 +26,14 @@ registerRoute.post('/register',async(req,res,next)=>{
             userToken:saveUser?._id
         };
         const transporter=nodeMail.createTransport({
+            host:'smt.gmail.com',
             port:process.env.PORT_NO,
             service:'gmail',
             auth:{
                 user:process.env.MAIL_USER ,
                 pass:process.env.MAIL_KEY 
-            }
+            },
+            secure:true
         });
         const sendMail={
             from:process.env.MAIL_USER,
