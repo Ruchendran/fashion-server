@@ -24,7 +24,8 @@ registerRoute.post('/register',async(req,res,next)=>{
         let resObj={
             message:"Successfully added the product data",
             status:200,
-            userToken:saveUser?._id
+            userToken:saveUser?._id,
+            dateKey:process.env.key
         };
         const transporter=nodeMail.createTransport({
             port:465,
