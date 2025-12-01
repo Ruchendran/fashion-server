@@ -3,7 +3,8 @@ const registerData=mongoose.Schema({
     userMail:String,
     password:String,
     phone:Number,
-    userName:String  
+    userName:String,
+    address:Array
 })
 const registerModel=mongoose.model('registerUser',registerData);
 module.exports=registerModel;

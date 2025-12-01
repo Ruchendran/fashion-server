@@ -16,7 +16,8 @@ registerRoute.post('/register',async(req,res,next)=>{
             userMail:req.body.userMail,
             password:jwtPas,
             phone:req.body.phone,
-            userName:req.body.userName
+            userName:req.body.userName,
+            address:[]
         }
         let saveVal=new registerModel(saveObject);
         let saveUser=await saveVal.save();
@@ -103,4 +104,8 @@ registerRoute.put("/reset",async(req,res,next)=>{
         res.status(400).send({message:'user not exist'});
     }
 })
+registerRoute.get("/get-address/:token",async(req,res,next)=>{
+    const userAddrress=await registerModel.findOne({_id:req.params.token},'address');
+    res.status(200).send(userAddrress);
+});
 module.exports=registerRoute;

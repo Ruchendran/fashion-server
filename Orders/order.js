@@ -2,6 +2,8 @@ const express=require('express');
 const orderRoute=express.Router();
 const path=require('path');
 const orderModel=require("../Models/orderModel.js");
+const registerModel=require("../Models/registerModel.js");
+const e = require('express');
 orderRoute.get("/order-count",async(req,res,next)=>{
     const orderNo=await orderModel.find({userId:req.query.userToken});
     res.status(200).send({orderCount:orderNo.length})
@@ -34,6 +36,7 @@ orderRoute.post("/append",async(req,res,next)=>{
     const uniqueId=req.body.productId;
     const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
     if(!idAvailOrNotInCart){
+        const addressString=req.body.address+' '+req.body.village.split(' ').join('-')+' '+req.body.pincode+' '+req.body.payOnDelivery +' '+req.body.phone;
         let appendObject={
             productName:req.body.productName,
             productDes:req.body.productDes,
@@ -42,7 +45,7 @@ orderRoute.post("/append",async(req,res,next)=>{
             productId:req.body.productId,
             userId:req.body.userId,
             quantity:req.body.quantity,
-            address:req.body.address,
+            address:addressString,
             pincode:req.body.pincode,
             village:req.body.village,
             phone:req.body.phone,
@@ -53,6 +56,19 @@ orderRoute.post("/append",async(req,res,next)=>{
         };
         const saveToOrder=await orderModel(appendObject);
         saveToOrder.save();
+        const getAddress=await registerModel.findOne({_id:req.body.userId},'address');
+        if(getAddress.address.length<3){
+            if(!getAddress.address.includes(addressString)){
+                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.userId},{$push:{address:addressString}});
+            }
+        }
+        else{
+            if(!getAddress.address.includes(addressString)){
+                const updAddress=getAddress.address.slice(1,getAddress.address.length);
+                updAddress.push(addressString);
+                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.userId},{address:updAddress});
+            }
+        }
         resObj.status=200;
         resObj.message='Product Added to Order';
         res.send(resObj);
