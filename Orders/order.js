@@ -36,7 +36,7 @@ orderRoute.post("/append",async(req,res,next)=>{
     const uniqueId=req.body.productId;
     const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
     if(!idAvailOrNotInCart){
-        const addressString=req.body.address.split(' ').join('-')+' '+req.body.village.split(' ').join('-')+' '+req.body.pincode+' '+req.body.payOnDelivery +' '+req.body.phone;
+        const addressString=req.body.address.split(' ').join('-')+' '+req.body.village.split(' ').join('-')+' '+req.body.pincode +' '+req.body.phone;
         let appendObject={
             productName:req.body.productName,
             productDes:req.body.productDes,
