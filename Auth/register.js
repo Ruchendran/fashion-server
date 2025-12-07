@@ -1,8 +1,9 @@
 const express=require("express");
 const registerRoute=express.Router();
-const nodeMail=require('nodemailer');
+const {Resend} =require('resend')
 require('dotenv').config();
 const pasKey = process.env.pas_key || 'fashion';
+const resendMailKey=process.env.RESEND_MAIL_KEY
 const registerModel=require("../Models/registerModel");
 const jwtToken=require('jsonwebtoken');
 registerRoute.post('/register',async(req,res,next)=>{
@@ -26,27 +27,22 @@ registerRoute.post('/register',async(req,res,next)=>{
             status:200,
             userToken:saveUser?._id
         };
-        const transporter=nodeMail.createTransport({
-            service:'gmail',
-            auth:{
-                user:process.env.MAIL_USER ||'vvruchendran141594@gmail.com' ,
-                pass:process.env.MAIL_KEY ||'qkewfqdeojmsuaxh'
-            }
-        });
-        const sendMail={
-            from:'vvruchendran141594@gmail.com',
-            to:req.body.userMail,
-            subject:'product owner',
-            text:"Hii welcome fresh sale."
-        }
-        // transporter.sendMail(sendMail,(error,info)=>{
-        //     if(error){
-        //         console.log(error)
-        //     }else{
-        //          console.log(info,"hiii")
-        //     }
-        // })
+        // const resend=new Resend(resendMailKey);
+        // console.log(resendMailKey)
+        // const {data,error}=await resend.emails.send({
+        //     from: 'Fashion UI Support <support@fashion-ui.netlify.app>',
+        //     to: req.body.userMail,
+        //     subject: 'Season',
+        //     html: '<p>Congrats you have succesfully registered.<strong>szdzxfsf</strong>!</p>'
+        // });
+        // if(data){
+        //     console.log(data,"data")
+        // }
+        // if(error){
+        //     console.log(error,"sss")
+        // }
         res.send(resObj);
+        
     }
     /// This is for login flow.
     else{
