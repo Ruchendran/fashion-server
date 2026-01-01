@@ -2,6 +2,7 @@ const express=require("express");
 const adminRoute=express.Router();
 const productModel=require("../Models/productModel.js");
 const registerModel=require("../Models/registerModel.js");
+const orderModel=require("../Models/orderModel.js");
 adminRoute.post("/upload",async(req,res,next)=>{
     // console.group(req.body,"data");
     let appendObject={productName:req.body.prodName,productDes:req.body.prodDes,productImg:req.body.prodImg,productPrice:req.body.prodPrice,productFamily:req.body.productFamily,productRating:req.body.productRating}
@@ -18,5 +19,10 @@ adminRoute.delete('/registered-user/',async(req,res,next)=>{
     const deleteUser=await registerModel.deleteOne({_id:userId});
     // console.log(userId,deleteUser);
     res.status(200).send({message:'succesfully user deleted'});
+})
+adminRoute.get('/get-orders-list',async(req,res,next)=>{
+    console.log("its hit")
+    const getOrdersList=await orderModel.find({}).sort({productPrice:1});
+    res.status(200).send(getOrdersList)
 })
 module.exports=adminRoute;

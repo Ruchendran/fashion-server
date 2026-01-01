@@ -41,7 +41,7 @@ orderRoute.post("/append",async(req,res,next)=>{
             productName:req.body.productName,
             productDes:req.body.productDes,
             productImg:req.body.productImg,
-            productPrice:req.body.productPrice,
+            productPrice:Number(req.body.productPrice),
             productId:req.body.productId,
             userId:req.body.userId,
             quantity:req.body.quantity,
@@ -125,4 +125,10 @@ orderRoute.get("/:orderId",async(req,res,next)=>{
         res.send(resObj)
     }
 });
+orderRoute.post("/update-order-stage",async(req,res,next)=>{
+    const orderId=req.body.orderId;
+    const trackIndex=req.body.trackIndex;
+    const updOrder=await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
+    res.status(200).send({message:"SuccessFully updated"});
+})
 module.exports=orderRoute;
