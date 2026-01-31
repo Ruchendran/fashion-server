@@ -3,8 +3,9 @@ const adminRoute=express.Router();
 const productModel=require("../Models/productModel.js");
 const registerModel=require("../Models/registerModel.js");
 const orderModel=require("../Models/orderModel.js");
+const cartModel=require("../Models/cartModel.js");
 adminRoute.post("/upload",async(req,res,next)=>{
-    // console.group(req.body,"data");
+    console.log(req.body,"data");
     let appendObject={productName:req.body.prodName,productDes:req.body.prodDes,productImg:req.body.prodImg,productPrice:req.body.prodPrice,productFamily:req.body.productFamily,productRating:req.body.productRating}
     let prodVal=await productModel(appendObject);
     prodVal.save();
@@ -18,10 +19,11 @@ adminRoute.delete('/registered-user/',async(req,res,next)=>{
     const userId=req.query.userId;
     const deleteUser=await registerModel.deleteOne({_id:userId});
     // console.log(userId,deleteUser);
+    const deleteOrders=await orderModel.deleteMany({userId:userId});
+    const deleteCart=await cartModel.deleteMany({userId:userId})
     res.status(200).send({message:'succesfully user deleted'});
 })
 adminRoute.get('/get-orders-list',async(req,res,next)=>{
-    console.log("its hit")
     const getOrdersList=await orderModel.find({}).sort({productPrice:1});
     res.status(200).send(getOrdersList)
 })

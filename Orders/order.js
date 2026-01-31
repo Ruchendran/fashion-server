@@ -9,6 +9,7 @@ orderRoute.get("/order-count",async(req,res,next)=>{
     res.status(200).send({orderCount:orderNo.length})
 })
 orderRoute.post("/append",async(req,res,next)=>{
+    console.log("appen",req.body)
     const date=new Date();
     date.setHours(date.getHours()+5);
     date.setMinutes(date.getMinutes()+30);
@@ -16,7 +17,7 @@ orderRoute.post("/append",async(req,res,next)=>{
         status:'',
         message:''
     }
-    let trackerMap=['Satrawada','Godown',req.body.village];
+    let trackerMap=['Satrawada','Godown',req.body.destinatonAddress.village];
     // switch(req.body.village){
     //     case 'Ekambarakuppam':
     //          trackerMap= ['Satrawada','Karakandapuram','Checkpost','Ekambarakuppam'];
@@ -36,30 +37,36 @@ orderRoute.post("/append",async(req,res,next)=>{
     const uniqueId=req.body.productId;
     const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
     if(!idAvailOrNotInCart){
-        const addressString=req.body.address.split(' ').join('-')+' '+req.body.village.split(' ').join('-')+' '+req.body.pincode +' '+req.body.phone;
+        const addressString=req.body.destinatonAddress.address.split(' ').join('-')+' '+req.body.destinatonAddress.village.split(' ').join('-')+' '+req.body.destinatonAddress.pincode +' '+req.body.destinatonAddress.phone;
+        let orderedProducts=[]
+        req.body.orderDetails.map((product)=>{
+            orderedProducts.push({
+                productName:product.productName,
+                productDes:product.productDes,
+                productImg:product.productImg,
+                productPrice:Number(product.productPrice),
+                productId:product.productId,
+                quantity:product.quantity,
+            })
+        })
         let appendObject={
-            productName:req.body.productName,
-            productDes:req.body.productDes,
-            productImg:req.body.productImg,
-            productPrice:Number(req.body.productPrice),
-            productId:req.body.productId,
-            userId:req.body.userId,
-            quantity:req.body.quantity,
+            orderedProducts:orderedProducts,
+            userId:req.body.orderDetails[0].userId,
             address:addressString,
-            pincode:req.body.pincode,
-            village:req.body.village,
-            phone:req.body.phone,
-            payOnDelivery:req.body.payOnDelivery=='Yes'?true:false,
+            pincode:req.body.destinatonAddress.pincode,
+            village:req.body.destinatonAddress.village,
+            phone:req.body.destinatonAddress.phone,
+            payOnDelivery:req.body.destinatonAddress.payOnDelivery=='Yes'?true:false,
             orderTime:new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             activeTrackingIndex:0,
             trackerMap:trackerMap
         };
         const saveToOrder=await orderModel(appendObject);
         saveToOrder.save();
-        const getAddress=await registerModel.findOne({_id:req.body.userId},'address');
+        const getAddress=await registerModel.findOne({_id:req.body.orderDetails[0].userId},'address');
         if(getAddress.address.length<3){
             if(!getAddress.address.includes(addressString)){
-                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.userId},{$push:{address:addressString}});
+                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.orderDetails[0].userId},{$push:{address:addressString}});
             }
         }
         else{

@@ -1,12 +1,7 @@
 const mongoose=require('mongoose');
 const orderModel=mongoose.Schema({
+    orderedProducts:Object,
     userId:String,
-    productName:String,
-    productDes:String,
-    productImg:String ,
-    productPrice:Number,
-    productId:String,
-    quantity:Number,
     address:String,
     pincode:Number,
     village:String,
