@@ -3,7 +3,7 @@ const orderRoute=express.Router();
 const path=require('path');
 const orderModel=require("../Models/orderModel.js");
 const registerModel=require("../Models/registerModel.js");
-const e = require('express');
+const {GeoRouting}=require("../general-api/geo-api.js");
 orderRoute.get("/order-count",async(req,res,next)=>{
     const orderNo=await orderModel.find({userId:req.query.userToken});
     res.status(200).send({orderCount:orderNo.length})
@@ -17,7 +17,8 @@ orderRoute.post("/append",async(req,res,next)=>{
         status:'',
         message:''
     }
-    let trackerMap=['Satrawada','Godown',req.body.destinatonAddress.village];
+    let routeCities=await GeoRouting(517592,req.body.destinatonAddress.pincode);
+    let trackerMap=['Satrawada','Godown',...routeCities];
     // switch(req.body.village){
     //     case 'Ekambarakuppam':
     //          trackerMap= ['Satrawada','Karakandapuram','Checkpost','Ekambarakuppam'];
@@ -137,5 +138,10 @@ orderRoute.post("/update-order-stage",async(req,res,next)=>{
     const trackIndex=req.body.trackIndex;
     const updOrder=await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
     res.status(200).send({message:"SuccessFully updated"});
+});
+orderRoute.post("/specific-user-order",async(req,res,next)=>{
+    console.log(req.body)
+    const getSpecicOrderDetail=await orderModel.find({userId:req.body.userId,_id:req.body.orderId})
+    res.status(200).send({message:"SuccessFully details send",specificUserOrder:getSpecicOrderDetail[0]});
 })
 module.exports=orderRoute;

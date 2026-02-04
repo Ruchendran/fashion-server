@@ -22,7 +22,9 @@ index.use("/products",productRoute);
 index.use("/cart",cartRoute);
 index.use("/order",orderRoute);
 index.use("/chatbot",chatbotRoute);
-index.use("/generic",genericRoute)
+index.use("/generic",genericRoute);
+// const {GeoRouting}=require(path.join(__dirname,'general-api','geo-api.js'));
+// GeoRouting(517592,600020)
 db.getStartDb();
 index.listen(port,()=>{
     console.log("Server Has Been Started At 3000 local host");
