@@ -9,7 +9,6 @@ orderRoute.get("/order-count",async(req,res,next)=>{
     res.status(200).send({orderCount:orderNo.length})
 })
 orderRoute.post("/append",async(req,res,next)=>{
-    console.log("appen",req.body)
     const date=new Date();
     date.setHours(date.getHours()+5);
     date.setMinutes(date.getMinutes()+30);
@@ -18,7 +17,8 @@ orderRoute.post("/append",async(req,res,next)=>{
         message:''
     }
     let routeCities=await GeoRouting(517592,req.body.destinatonAddress.pincode);
-    let trackerMap=['Satrawada','Godown',...routeCities];
+    let formatRoute=(routeCities && routeCities.length > 0)?[...routeCities,req.body.destinatonAddress.village]:[req.body.destinatonAddress.village];
+    let trackerMap=['Satrawada','Godown',...formatRoute];
     // switch(req.body.village){
     //     case 'Ekambarakuppam':
     //          trackerMap= ['Satrawada','Karakandapuram','Checkpost','Ekambarakuppam'];
