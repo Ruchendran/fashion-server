@@ -64,7 +64,7 @@ orderRoute.post("/append",async(req,res,next)=>{
         };
         const saveToOrder=await orderModel(appendObject);
         saveToOrder.save();
-        const getAddress=await registerModel.findOne({_id:req.body.orderDetails[0].userId},'address');
+        const getAddress=await registerModel.findOne({_id:req.body.orderDetails[0].userId},{address:1});
         if(getAddress.address.length<3){
             if(!getAddress.address.includes(addressString)){
                 const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.orderDetails[0].userId},{$push:{address:addressString}});
@@ -74,7 +74,7 @@ orderRoute.post("/append",async(req,res,next)=>{
             if(!getAddress.address.includes(addressString)){
                 const updAddress=getAddress.address.slice(1,getAddress.address.length);
                 updAddress.push(addressString);
-                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.userId},{address:updAddress});
+                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.orderDetails[0].userId},{address:updAddress});
             }
         }
         resObj.status=200;
