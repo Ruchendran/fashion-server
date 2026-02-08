@@ -60,7 +60,8 @@ orderRoute.post("/append",async(req,res,next)=>{
             payOnDelivery:req.body.destinatonAddress.payOnDelivery=='Yes'?true:false,
             orderTime:new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             activeTrackingIndex:0,
-            trackerMap:trackerMap
+            trackerMap:trackerMap,
+            delivered:false
         };
         const saveToOrder=await orderModel(appendObject);
         saveToOrder.save();
@@ -136,7 +137,13 @@ orderRoute.get("/:orderId",async(req,res,next)=>{
 orderRoute.post("/update-order-stage",async(req,res,next)=>{
     const orderId=req.body.orderId;
     const trackIndex=req.body.trackIndex;
-    const updOrder=await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
+    const getOrder=await orderModel.findOne({_id:orderId});
+    if(trackIndex == getOrder.trackerMap.length-1){
+         await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex,delivered:true}});
+    }
+    else{
+        await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
+    }
     res.status(200).send({message:"SuccessFully updated"});
 });
 orderRoute.post("/specific-user-order",async(req,res,next)=>{

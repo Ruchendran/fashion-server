@@ -9,7 +9,8 @@ const orderModel=mongoose.Schema({
     payOnDelivery:Boolean,
     orderTime:String,
     activeTrackingIndex:Number,
-    trackerMap:Object
+    trackerMap:Object,
+    delivered:Boolean
 });
 const order=mongoose.model('order',orderModel);
 module.exports=order;
