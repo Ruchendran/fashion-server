@@ -1,9 +1,9 @@
 async function getLocation(pin) {
-    return fetch(`https://api.zippopotam.us/IN/${pin}`).then((data) => {
+    return fetch(`https://pincodesinfo.in/api/pincode/${pin}`).then((data) => {
         return data.json()
     }).then((finalVal) => {
         try {
-            return finalVal.places[0];
+            return finalVal.results[0];
         }
         catch {
             return null;
@@ -55,10 +55,9 @@ async function GeoRouting(startPincode, destinPincode) {
             cityNames.push(cityName)
         }
     }
-    // if(cityNames){
-    //     return cityNames;
-    // }
-    return cityNames ?? null;
+    const deleteDup=new Set(cityNames)
+    const arrangedUniqLocation=[...deleteDup]
+    return arrangedUniqLocation ?? null;
 };
 
 module.exports = { GeoRouting }
