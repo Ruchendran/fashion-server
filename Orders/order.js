@@ -3,6 +3,7 @@ const orderRoute=express.Router();
 const path=require('path');
 const orderModel=require("../Models/orderModel.js");
 const registerModel=require("../Models/registerModel.js");
+const cartModel=require("../Models/cartModel.js");
 const {GeoRouting}=require("../general-api/geo-api.js");
 orderRoute.get("/order-count",async(req,res,next)=>{
     const orderNo=await orderModel.find({userId:req.query.userToken});
@@ -18,26 +19,9 @@ orderRoute.post("/append",async(req,res,next)=>{
     }
     let routeCities=await GeoRouting(517592,req.body.destinatonAddress.pincode);
     let formatRoute=(routeCities && routeCities.length > 0)?[...routeCities,req.body.destinatonAddress.village]:[req.body.destinatonAddress.village];
-    let trackerMap=['Satrawada','Godown',...formatRoute];
-    // switch(req.body.village){
-    //     case 'Ekambarakuppam':
-    //          trackerMap= ['Satrawada','Karakandapuram','Checkpost','Ekambarakuppam'];
-    //         break;
-    //     case 'Pudhupet':
-    //         trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Pudupet'];
-    //         break;
-    //     case 'Chindalpet':
-    //          trackerMap= ['Satrawada','Karakandapuram','Ekambarakuppam','Chindalpet'];
-    //          break;
-    //     case 'Nagari':
-    //          trackerMap= ['Satrawada','Ekambarakuppam','Pudupet','Nagari'];
-    //         break;
-    //    default:
-    //         trackerMap= ['Home','WestStreet','Mainroad','Satrawada']
-    // }
-    const uniqueId=req.body.productId;
-    const idAvailOrNotInCart=await orderModel.findOne({productId:uniqueId,userId:req.body.userId});
-    if(!idAvailOrNotInCart){
+    let trackerMap=['Satrawada','Store',...formatRoute];
+
+    // if(!idAvailOrNotInCart){
         const addressString=req.body.destinatonAddress.address.split(' ').join('-')+' '+req.body.destinatonAddress.village.split(' ').join('-')+' '+req.body.destinatonAddress.pincode +' '+req.body.destinatonAddress.phone;
         let orderedProducts=[]
         req.body.orderDetails.map((product)=>{
@@ -63,8 +47,10 @@ orderRoute.post("/append",async(req,res,next)=>{
             trackerMap:trackerMap,
             delivered:false
         };
+        try{
         const saveToOrder=await orderModel(appendObject);
-        saveToOrder.save();
+        await saveToOrder.save();
+        const deleteCart= await cartModel.deleteMany({userId:req.body.orderDetails[0].userId});
         const getAddress=await registerModel.findOne({_id:req.body.orderDetails[0].userId},{address:1});
         if(getAddress.address.length<3){
             if(!getAddress.address.includes(addressString)){
@@ -82,7 +68,7 @@ orderRoute.post("/append",async(req,res,next)=>{
         resObj.message='Product Added to Order';
         res.send(resObj);
     }
-    else{
+    catch(e){
         resObj.status=409;
         resObj.message='Already it is Available in Order.'
         res.send(resObj);
