@@ -16,7 +16,7 @@ async function getRoute(startData, endData) {
             return data.json()
         }).then((finalVal) => {
             try {
-                return finalVal.routes[0].geometry.coordinates
+                return {routeValues:finalVal.routes[0].geometry.coordinates,distance:finalVal.routes[0].distance}
             }
             catch {
                 return null;
@@ -44,10 +44,10 @@ async function GeoRouting(startPincode, destinPincode) {
     const AllRoutes = await getRoute(startData, endData);
     let routePoints = [];
     const cityNames = [];
-    if (AllRoutes) {
-        const frequentVal = Math.floor(AllRoutes.length / 5);
-        for (let i = 0; i < AllRoutes.length; i = i + frequentVal) {
-            routePoints.push(AllRoutes[i])
+    if (AllRoutes.routeValues) {
+        const frequentVal = Math.floor(AllRoutes.routeValues.length / 5);
+        for (let i = 0; i < AllRoutes.routeValues.length; i = i + frequentVal) {
+            routePoints.push(AllRoutes.routeValues[i])
         }
         routePoints = routePoints.reverse();
         for (let i = 0; i < routePoints.length; i++) {
@@ -57,7 +57,7 @@ async function GeoRouting(startPincode, destinPincode) {
     }
     const deleteDup=new Set(cityNames)
     const arrangedUniqLocation=[...deleteDup]
-    return arrangedUniqLocation ?? null;
+    return {arrangedUniqLocation:arrangedUniqLocation ?? null,distance:AllRoutes.distance}
 };
 
 module.exports = { GeoRouting }

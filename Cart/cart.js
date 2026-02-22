@@ -11,7 +11,17 @@ cartRoute.post("/save",async(req,res,next)=>{
         message:''
     }
     if(!idAvailOrNotInCart){
-        let appendObject={productName:getProductData.productName,productDes:getProductData.productDes,productImg:getProductData.productImg,productPrice:getProductData.productPrice,productId:getProductData._id,userId:req.body.userToken,quantity:req.body.quantity,productFamily:req.body.productFamily}
+        let appendObject={
+            productName:getProductData.productName,
+            productDes:getProductData.productDes,
+            productImg:getProductData.productImg,
+            productPrice:getProductData.productPrice,
+            productId:getProductData._id,
+            userId:req.body.userToken,
+            quantity:req.body.quantity,
+            productFamily:req.body.productFamily,
+            saveLater:false
+        }
         const saveToCart=await cartModel(appendObject);
         saveToCart.save();
         resObj.status=200;
@@ -70,5 +80,19 @@ cartRoute.delete("/delete/:productId/:userId",async(req,res,next)=>{
 cartRoute.get("/cart-count",async(req,res,next)=>{
     const cartCount=await cartModel.find({userId:req.query.userToken});
     res.status(200).send({cartCount:cartCount.length});
+})
+cartRoute.put("/save-later-flag/upd",async(req,res,next)=>{
+    const cartDetail=await cartModel.updateOne({productId:req.body.productId,userId:req.body.userId},{$set:{saveLater:true}})
+    let message;
+    let statusCode;
+    if(cartDetail.modifiedCount){
+        statusCode=200;
+        message='Status Updated';
+    }
+    else{
+        statusCode=200;
+        message='Status Already Updated'
+    }
+    res.status(statusCode).send({message});
 })
 module.exports=cartRoute;

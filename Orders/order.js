@@ -18,9 +18,15 @@ orderRoute.post("/append",async(req,res,next)=>{
         message:''
     }
     let routeCities=await GeoRouting(517592,req.body.destinatonAddress.pincode);
-    let formatRoute=(routeCities && routeCities.length > 0)?[...routeCities,req.body.destinatonAddress.village]:[req.body.destinatonAddress.village];
+    let formatRoute=(routeCities.arrangedUniqLocation && routeCities.arrangedUniqLocation.length > 0)?[...routeCities.arrangedUniqLocation,req.body.destinatonAddress.village]:[req.body.destinatonAddress.village];
     let trackerMap=['Satrawada','Store',...formatRoute];
-
+    let distance=Math.floor(routeCities.distance/1000);
+    let expectedDate=routeCities.distance?Math.floor(distance/100):0;
+    calculateExpectedDate=(dayCount)=>{
+        const date=new Date();
+        date.setDate(date.getDate()+3);
+        return date.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })
+    }
     // if(!idAvailOrNotInCart){
         const addressString=req.body.destinatonAddress.address.split(' ').join('-')+' '+req.body.destinatonAddress.village.split(' ').join('-')+' '+req.body.destinatonAddress.pincode +' '+req.body.destinatonAddress.phone;
         let orderedProducts=[]
@@ -45,7 +51,8 @@ orderRoute.post("/append",async(req,res,next)=>{
             orderTime:new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             activeTrackingIndex:0,
             trackerMap:trackerMap,
-            delivered:false
+            delivered:false,
+            expectedTime:expectedDate == 0?'Today':calculateExpectedDate(expectedDate)
         };
         try{
         const saveToOrder=await orderModel(appendObject);
@@ -98,6 +105,7 @@ orderRoute.get("/:orderId",async(req,res,next)=>{
     }
     let orderDetails=await orderModel.findOne({_id:req.params.orderId});
     if(orderDetails){
+        const userDetails=await registerModel.findOne({_id:orderDetails.userId});
         let presentTime=new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
         // let calculateOrderTime=((orderDetails.orderTime.getHours()+5)*60+orderDetails.orderTime.getMinutes()+30)
         // let caluculateIndex=(presentTime.getHours()*60+presentTime.getMinutes())-calculateOrderTime;
