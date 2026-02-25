@@ -55,30 +55,30 @@ orderRoute.post("/append",async(req,res,next)=>{
             expectedTime:expectedDate == 0?'Today':calculateExpectedDate(expectedDate)
         };
         try{
-        const saveToOrder=await orderModel(appendObject);
-        await saveToOrder.save();
-        const deleteCart= await cartModel.deleteMany({userId:req.body.orderDetails[0].userId});
-        const getAddress=await registerModel.findOne({_id:req.body.orderDetails[0].userId},{address:1});
-        if(getAddress.address.length<3){
-            if(!getAddress.address.includes(addressString)){
-                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.orderDetails[0].userId},{$push:{address:addressString}});
+            const saveToOrder=await orderModel(appendObject);
+            await saveToOrder.save();
+            const deleteCart= await cartModel.deleteMany({userId:req.body.orderDetails[0].userId});
+            const getAddress=await registerModel.findOne({_id:req.body.orderDetails[0].userId},{address:1});
+            if(getAddress.address.length<3){
+                if(!getAddress.address.includes(addressString)){
+                    const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.orderDetails[0].userId},{$push:{address:addressString}});
+                }
             }
-        }
-        else{
-            if(!getAddress.address.includes(addressString)){
-                const updAddress=getAddress.address.slice(1,getAddress.address.length);
-                updAddress.push(addressString);
-                const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.orderDetails[0].userId},{address:updAddress});
+            else{
+                if(!getAddress.address.includes(addressString)){
+                    const updAddress=getAddress.address.slice(1,getAddress.address.length);
+                    updAddress.push(addressString);
+                    const saveAddressInRegisterModel= await registerModel.updateOne({_id:req.body.orderDetails[0].userId},{address:updAddress});
+                }
             }
-        }
-        resObj.status=200;
-        resObj.message='Product Added to Order';
-        res.send(resObj);
+            resObj.status=200;
+            resObj.message='Product Added to Order';
+            res.send(resObj);
     }
     catch(e){
         resObj.status=409;
         resObj.message='Already it is Available in Order.'
-        res.send(resObj);
+        res.send(e.message);
     }
 });
 orderRoute.get("/list/:userToken",async(req,res,next)=>{
