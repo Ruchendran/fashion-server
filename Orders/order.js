@@ -7,6 +7,44 @@ const cartModel=require("../Models/cartModel.js");
 const {GeoRouting}=require("../general-api/geo-api.js");
 const productModel = require('../Models/productModel.js');
 const { Promise } = require('mongoose');
+
+orderRoute.post("/upd/feedback",async(req,res,next)=>{
+    try{
+        const feedbackProductList=req.body.productsListPayload;
+        // const orderId=req.body.orderId;
+        for (const feedbackPro of feedbackProductList){
+            const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
+            const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
+            const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
+            const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
+            try{
+            const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
+                {$set:
+                    {starCount:starCountUpd,
+                    feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
+                    productRating:productRatingUpd
+                    }
+                });
+            }
+            catch(e){
+                 res.status(200).send({message:'pro'});
+            }
+        };
+        // console.log(req.body.userId,' sep  ',orderId)
+        try{
+        await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
+        }
+        catch(e){
+            console.log(e.message)
+             res.status(200).send({message:'del'});
+        }
+        res.status(200).send({message:"Successfully feedback updated."})
+        // console.log("successs")
+    }
+    catch(e){
+        res.status(404).send({message:e.message+'fsf'});
+    }
+})
 orderRoute.get("/order-count",async(req,res,next)=>{
     const orderNo=await orderModel.find({userId:req.query.userToken});
     res.status(200).send({orderCount:orderNo.length})
@@ -106,6 +144,24 @@ orderRoute.get("/list/:userToken",async(req,res,next)=>{
         res.send(resObj)
     }
 });
+orderRoute.post("/update-order-stage",async(req,res,next)=>{
+    const orderId=req.body.orderId;
+    const trackIndex=req.body.trackIndex;
+    const getOrder=await orderModel.findOne({_id:orderId});
+    if(trackIndex == getOrder.trackerMap.length-1){
+         await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex,delivered:true}});
+    }
+    else{
+        await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
+    }
+    res.status(200).send({message:"SuccessFully updated"});
+});
+orderRoute.post("/specific-user-order",async(req,res,next)=>{
+    // console.log(req.body)
+    const getSpecicOrderDetail=await orderModel.find({userId:req.body.userId,_id:req.body.orderId})
+    res.status(200).send({message:"SuccessFully details send",specificUserOrder:getSpecicOrderDetail[0]});
+})
+/// generic routes.
 orderRoute.get("/:orderId",async(req,res,next)=>{
     let resObj={
         status:'',
@@ -136,21 +192,4 @@ orderRoute.get("/:orderId",async(req,res,next)=>{
         res.send(resObj)
     }
 });
-orderRoute.post("/update-order-stage",async(req,res,next)=>{
-    const orderId=req.body.orderId;
-    const trackIndex=req.body.trackIndex;
-    const getOrder=await orderModel.findOne({_id:orderId});
-    if(trackIndex == getOrder.trackerMap.length-1){
-         await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex,delivered:true}});
-    }
-    else{
-        await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
-    }
-    res.status(200).send({message:"SuccessFully updated"});
-});
-orderRoute.post("/specific-user-order",async(req,res,next)=>{
-    // console.log(req.body)
-    const getSpecicOrderDetail=await orderModel.find({userId:req.body.userId,_id:req.body.orderId})
-    res.status(200).send({message:"SuccessFully details send",specificUserOrder:getSpecicOrderDetail[0]});
-})
 module.exports=orderRoute;
