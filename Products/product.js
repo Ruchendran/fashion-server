@@ -64,7 +64,7 @@ productRoute.post("/upd-product-feedback",async(req,res,next)=>{
         console.log("successs")
     }
     catch(e){
-        res.status(404).send({message:e.message});
+        res.status(200).send({message:e.message});
     }
 })
 
