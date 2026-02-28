@@ -60,7 +60,7 @@ productRoute.post("/upd-product-feedback",async(req,res,next)=>{
                 });
             }
             catch(e){
-                console.log(e.message);
+                 res.status(300).send({message:'pro'});
             }
         };
         // console.log(req.body.userId,' sep  ',orderId)
@@ -69,12 +69,13 @@ productRoute.post("/upd-product-feedback",async(req,res,next)=>{
         }
         catch(e){
             console.log(e.message)
+             res.status(300).send({message:'del'});
         }
         res.status(300).send({message:"Successfully feedback updated."})
         console.log("successs")
     }
     catch(e){
-        res.status(404).send({message:e.message});
+        res.status(404).send({message:e.message+'fsf'});
     }
 })
 
