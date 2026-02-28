@@ -26,7 +26,7 @@ productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
 //     res.status(200).send(allProducts);
 // })
 
-productRoute.post("/upd-product/feedback",async(req,res,next)=>{
+productRoute.put("/upd-product/feedback",async(req,res,next)=>{
     try{
         const feedbackProductList=req.body.productsListPayload;
         // const orderId=req.body.orderId;
