@@ -5,6 +5,8 @@ const orderModel=require("../Models/orderModel.js");
 const registerModel=require("../Models/registerModel.js");
 const cartModel=require("../Models/cartModel.js");
 const {GeoRouting}=require("../general-api/geo-api.js");
+const productModel = require('../Models/productModel.js');
+const { Promise } = require('mongoose');
 orderRoute.get("/order-count",async(req,res,next)=>{
     const orderNo=await orderModel.find({userId:req.query.userToken});
     res.status(200).send({orderCount:orderNo.length})
@@ -30,7 +32,8 @@ orderRoute.post("/append",async(req,res,next)=>{
     // if(!idAvailOrNotInCart){
         const addressString=req.body.destinatonAddress.address.split(' ').join('-')+' '+req.body.destinatonAddress.village.split(' ').join('-')+' '+req.body.destinatonAddress.pincode +' '+req.body.destinatonAddress.phone;
         let orderedProducts=[]
-        req.body.orderDetails.map((product)=>{
+        req.body.orderDetails.forEach((product)=>{
+            // const getProductDetails=await productModel.find({_id:product.productId});
             orderedProducts.push({
                 productName:product.productName,
                 productDes:product.productDes,
@@ -38,10 +41,14 @@ orderRoute.post("/append",async(req,res,next)=>{
                 productPrice:Number(product.productPrice),
                 productId:product.productId,
                 quantity:product.quantity,
+                // productRating:getProductDetails[0].productRating,
+                // starCount:getProductDetails[0].starCount,
+                // feedBackGivenUsersCount:getProductDetails[0].feedBackGivenUsersCount,
+                userStarRating:0
             })
-        })
+        });
         let appendObject={
-            orderedProducts:orderedProducts,
+            orderedProducts:await orderedProducts,
             userId:req.body.orderDetails[0].userId,
             address:addressString,
             pincode:req.body.destinatonAddress.pincode,
@@ -52,7 +59,8 @@ orderRoute.post("/append",async(req,res,next)=>{
             activeTrackingIndex:0,
             trackerMap:trackerMap,
             delivered:false,
-            expectedTime:expectedDate == 0?'Today':calculateExpectedDate(expectedDate)
+            expectedTime:expectedDate == 0?'Today':calculateExpectedDate(expectedDate),
+            feedBack:false
         };
         try{
             const saveToOrder=await orderModel(appendObject);
@@ -141,7 +149,7 @@ orderRoute.post("/update-order-stage",async(req,res,next)=>{
     res.status(200).send({message:"SuccessFully updated"});
 });
 orderRoute.post("/specific-user-order",async(req,res,next)=>{
-    console.log(req.body)
+    // console.log(req.body)
     const getSpecicOrderDetail=await orderModel.find({userId:req.body.userId,_id:req.body.orderId})
     res.status(200).send({message:"SuccessFully details send",specificUserOrder:getSpecicOrderDetail[0]});
 })

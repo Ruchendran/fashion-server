@@ -2,9 +2,11 @@ const express=require("express");
 const cartRoute=express.Router();
 const productModel=require("../Models/productModel");
 const cartModel=require("../Models/cartModel.js");
+const saveLaterModel=require("../Models/saveLaterModel.js");
 cartRoute.post("/save",async(req,res,next)=>{
     const uniqueId=req.body._id;
     const getProductData=await productModel.findOne({_id:uniqueId});
+    const getSaveLaterData=await saveLaterModel.findOne({productId:uniqueId});
     const idAvailOrNotInCart=await cartModel.findOne({productId:uniqueId,userId:req.body.userToken});
     let resObj={
         status:'',
@@ -20,7 +22,7 @@ cartRoute.post("/save",async(req,res,next)=>{
             userId:req.body.userToken,
             quantity:req.body.quantity,
             productFamily:req.body.productFamily,
-            saveLater:false
+            saveLater:getSaveLaterData ? true:false
         }
         const saveToCart=await cartModel(appendObject);
         saveToCart.save();

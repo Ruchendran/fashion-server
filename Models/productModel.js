@@ -6,7 +6,10 @@ const productDetails=mongoose.Schema({
     productImg:String ,
     productPrice:Number,
     productFamily:String,
-    productRating:Number
+    productRating:Number,
+    starCount:Number,
+    feedBackGivenUsersCount:Number,
+    userStarRating:Number
 });
 
 const productModel=mongoose.model('product',productDetails);

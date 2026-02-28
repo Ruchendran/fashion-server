@@ -11,7 +11,8 @@ const orderModel=mongoose.Schema({
     activeTrackingIndex:Number,
     trackerMap:Object,
     delivered:Boolean,
-    expectedTime:String
+    expectedTime:String,
+    feedBack:Boolean
 });
 const order=mongoose.model('order',orderModel);
 module.exports=order;

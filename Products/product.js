@@ -2,6 +2,7 @@ const express=require("express");
 const productRoute=express.Router();
 const path=require("path");
 const productModel=require("../Models/productModel.js");
+const orderModel=require("../Models/orderModel.js");
 productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
     let totalRecords;
     let group=req.params.productFamily.slice(0,1).toUpperCase()+req.params.productFamily.slice(1,req.params.productFamily.length);
@@ -24,6 +25,7 @@ productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
 //     }
 //     res.status(200).send(allProducts);
 // })
+
 ///It is aways last.
 productRoute.get("/:productFamily/:page",async(req,res,next)=>{
     let allProducts;
@@ -39,5 +41,30 @@ productRoute.get("/:productFamily/:page",async(req,res,next)=>{
     }
     res.status(200).send(allProducts)
 });
+productRoute.post("/upd-product-feedback",async(req,res,next)=>{
+    try{
+        const feedbackProductList=req.body.productsListPayload;
+        // const orderId=req.body.orderId;
+        for (const feedbackPro of feedbackProductList){
+            const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
+            const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
+            const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
+            const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
+            const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
+                {$set:
+                    {starCount:starCountUpd,
+                    feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
+                    productRating:productRatingUpd
+                    }
+                });
+        };
+        // console.log(req.body.userId,' sep  ',orderId)
+        await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
+        res.status(200).send({message:"Successfully feedback updated."})
+    }
+    catch(e){
+        res.status(404).send({message:e.message});
+    }
+})
 
 module.exports=productRoute;

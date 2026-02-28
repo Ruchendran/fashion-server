@@ -7,7 +7,17 @@ const cartModel=require("../Models/cartModel.js");
 const saveLaterModel=require("../Models/saveLaterModel.js");
 adminRoute.post("/upload",async(req,res,next)=>{
     console.log(req.body,"data");
-    let appendObject={productName:req.body.prodName,productDes:req.body.prodDes,productImg:req.body.prodImg,productPrice:req.body.prodPrice,productFamily:req.body.productFamily,productRating:req.body.productRating}
+    let appendObject={
+        productName:req.body.prodName,
+        productDes:req.body.prodDes,
+        productImg:req.body.prodImg,
+        productPrice:req.body.prodPrice,
+        productFamily:req.body.productFamily,
+        productRating:req.body.productRating,
+        starCount:0,
+        feedBackGivenUsersCount:0,
+        userStarRating:0
+    }
     let prodVal=await productModel(appendObject);
     prodVal.save();
     res.send("Successfully added the product data ");
