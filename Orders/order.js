@@ -31,22 +31,21 @@ orderRoute.post("/append",async(req,res,next)=>{
     }
     // if(!idAvailOrNotInCart){
         const addressString=req.body.destinatonAddress.address.split(' ').join('-')+' '+req.body.destinatonAddress.village.split(' ').join('-')+' '+req.body.destinatonAddress.pincode +' '+req.body.destinatonAddress.phone;
-        let orderedProducts=[];
-        const setZero=0;
+        let orderedProducts=[]
         req.body.orderDetails.forEach((product)=>{
             // const getProductDetails=await productModel.find({_id:product.productId});
             orderedProducts.push({
                 productName:product.productName,
                 productDes:product.productDes,
-                // productImg:product.productImg,
-                // productPrice:Number(product.productPrice),
-                // productId:product.productId,
-                // quantity:product.quantity,
-                // userStarRating: setZero
+                productImg:product.productImg,
+                productPrice:Number(product.productPrice),
+                productId:product.productId,
+                quantity:product.quantity,
+                userStarRating:0
             })
         });
         let appendObject={
-            orderedProducts:await orderedProducts,
+            orderedProducts:orderedProducts,
             userId:req.body.orderDetails[0].userId,
             address:addressString,
             pincode:req.body.destinatonAddress.pincode,
