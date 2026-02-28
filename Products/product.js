@@ -4,64 +4,41 @@ const path=require("path");
 const productModel=require("../Models/productModel.js");
 const orderModel=require("../Models/orderModel.js");
 
-// productRoute.post("/upd/feedback",async(req,res,next)=>{
-//     try{
-//         const feedbackProductList=req.body.productsListPayload;
-//         // const orderId=req.body.orderId;
-//         for (const feedbackPro of feedbackProductList){
-//             const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
-//             const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
-//             const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
-//             const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
-//             try{
-//             const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
-//                 {$set:
-//                     {starCount:starCountUpd,
-//                     feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
-//                     productRating:productRatingUpd
-//                     }
-//                 });
-//             }
-//             catch(e){
-//                  res.status(200).send({message:'pro'});
-//             }
-//         };
-//         // console.log(req.body.userId,' sep  ',orderId)
-//         try{
-//         await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
-//         }
-//         catch(e){
-//             console.log(e.message)
-//              res.status(200).send({message:'del'});
-//         }
-//         res.status(200).send({message:"Successfully feedback updated."})
-//         // console.log("successs")
-//     }
-//     catch(e){
-//         res.status(404).send({message:e.message+'fsf'});
-//     }
-// })
-productRoute.post('/upd/feedback',async(req,res,next)=>{
+productRoute.post("/upd/feedback",async(req,res,next)=>{
     try{
-            const getProductFeedback = await productModel.find({_id:req.body.productId})
-            const starCountUpd=getProductFeedback[0].starCount + req.body.userStarRating;
+        const feedbackProductList=req.body.productsListPayload;
+        // const orderId=req.body.orderId;
+        for (const feedbackPro of feedbackProductList){
+            const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
+            const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
             const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
             const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
             try{
-                const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
-                    {$set:
-                        {starCount:starCountUpd,
-                        feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
-                        productRating:productRatingUpd
-                        }
-                    });
+            const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
+                {$set:
+                    {starCount:starCountUpd,
+                    feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
+                    productRating:productRatingUpd
+                    }
+                });
             }
             catch(e){
-                    res.status(200).send({message:e.message});
+                 res.status(200).send({message:'pro'});
             }
+        };
+        // console.log(req.body.userId,' sep  ',orderId)
+        try{
+        await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
+        }
+        catch(e){
+            console.log(e.message)
+             res.status(200).send({message:'del'});
+        }
+        res.status(200).send({message:"Successfully feedback updated."})
+        // console.log("successs")
     }
     catch(e){
-        res.status(200).send({message:e.message});
+        res.status(404).send({message:e.message+'fsf'});
     }
 })
 productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
