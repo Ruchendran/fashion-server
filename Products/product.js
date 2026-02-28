@@ -45,24 +45,24 @@ productRoute.post("/upd-product-feedback",async(req,res,next)=>{
     try{
         const feedbackProductList=req.body.productsListPayload;
         // const orderId=req.body.orderId;
-        for (const feedbackPro of feedbackProductList){
-            const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
-            const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
-            const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
-            const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
-            try{
-            const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
-                {$set:
-                    {starCount:starCountUpd,
-                    feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
-                    productRating:productRatingUpd
-                    }
-                });
-            }
-            catch(e){
-                 res.status(300).send({message:'pro'});
-            }
-        };
+        // for (const feedbackPro of feedbackProductList){
+        //     const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
+        //     const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
+        //     const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
+        //     const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
+        //     try{
+        //     const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
+        //         {$set:
+        //             {starCount:starCountUpd,
+        //             feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
+        //             productRating:productRatingUpd
+        //             }
+        //         });
+        //     }
+        //     catch(e){
+        //          res.status(300).send({message:'pro'});
+        //     }
+        // };
         // console.log(req.body.userId,' sep  ',orderId)
         try{
         await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
