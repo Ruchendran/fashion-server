@@ -31,7 +31,8 @@ orderRoute.post("/append",async(req,res,next)=>{
     }
     // if(!idAvailOrNotInCart){
         const addressString=req.body.destinatonAddress.address.split(' ').join('-')+' '+req.body.destinatonAddress.village.split(' ').join('-')+' '+req.body.destinatonAddress.pincode +' '+req.body.destinatonAddress.phone;
-        let orderedProducts=[]
+        let orderedProducts=[];
+        const setZero=0;
         req.body.orderDetails.forEach((product)=>{
             // const getProductDetails=await productModel.find({_id:product.productId});
             orderedProducts.push({
@@ -41,7 +42,7 @@ orderRoute.post("/append",async(req,res,next)=>{
                 productPrice:Number(product.productPrice),
                 productId:product.productId,
                 quantity:product.quantity,
-                userStarRating:1
+                userStarRating: setZero
             })
         });
         let appendObject={
