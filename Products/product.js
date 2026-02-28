@@ -26,43 +26,28 @@ productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
 //     res.status(200).send(allProducts);
 // })
 
-///It is aways last.
-productRoute.get("/:productFamily/:page",async(req,res,next)=>{
-    let allProducts;
-    let page=req.params.page;
-    let limit=9
-    let skip=(page-1)*limit;
-    let group=req.params.productFamily.slice(0,1).toUpperCase()+req.params.productFamily.slice(1,req.params.productFamily.length);
-    if(group == 'All'){
-        allProducts=await productModel.find({}).skip(skip).limit(limit);
-    }
-    else{
-        allProducts=await productModel.find({productFamily:group}).skip(skip).limit(limit);
-    }
-    res.status(200).send(allProducts)
-});
 productRoute.post("/upd-product-feedback",async(req,res,next)=>{
     try{
         const feedbackProductList=req.body.productsListPayload;
         // const orderId=req.body.orderId;
-        // for (const feedbackPro of feedbackProductList){
-        //     const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
-        //     const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
-        //     const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
-        //     const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
-        //     try{
-        //     const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
-        //         {$set:
-        //             {starCount:starCountUpd,
-        //             feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
-        //             productRating:productRatingUpd
-        //             }
-        //         });
-        //     }
-        //     catch(e){
-        //          res.status(300).send({message:'pro'});
-        //     }
-        // };
+        for (const feedbackPro of feedbackProductList){
+            const getProductFeedback = await productModel.find({_id:feedbackPro.productId})
+            const starCountUpd=getProductFeedback[0].starCount + feedbackPro.userStarRating;;
+            const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
+            const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
+            try{
+            const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
+                {$set:
+                    {starCount:starCountUpd,
+                    feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
+                    productRating:productRatingUpd
+                    }
+                });
+            }
+            catch(e){
+                 res.status(300).send({message:'pro'});
+            }
+        };
         // console.log(req.body.userId,' sep  ',orderId)
         try{
         await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
@@ -78,5 +63,19 @@ productRoute.post("/upd-product-feedback",async(req,res,next)=>{
         res.status(404).send({message:e.message+'fsf'});
     }
 })
-
+///It is aways last.
+productRoute.get("/:productFamily/:page",async(req,res,next)=>{
+    let allProducts;
+    let page=req.params.page;
+    let limit=9
+    let skip=(page-1)*limit;
+    let group=req.params.productFamily.slice(0,1).toUpperCase()+req.params.productFamily.slice(1,req.params.productFamily.length);
+    if(group == 'All'){
+        allProducts=await productModel.find({}).skip(skip).limit(limit);
+    }
+    else{
+        allProducts=await productModel.find({productFamily:group}).skip(skip).limit(limit);
+    }
+    res.status(200).send(allProducts)
+});
 module.exports=productRoute;
