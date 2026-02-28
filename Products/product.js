@@ -41,6 +41,29 @@ const orderModel=require("../Models/orderModel.js");
 //         res.status(404).send({message:e.message+'fsf'});
 //     }
 // })
+productRoute.post('/upd/feedback',async(req,res,next)=>{
+    try{
+            const getProductFeedback = await productModel.find({_id:req.body.productId})
+            const starCountUpd=getProductFeedback[0].starCount + req.body.userStarRating;
+            const feedBackGivenUsersCountUpd=getProductFeedback[0].feedBackGivenUsersCount+1;
+            const productRatingUpd=Math.floor(starCountUpd/feedBackGivenUsersCountUpd);
+            try{
+                const updProductFeedback=await productModel.updateOne({_id:feedbackPro.productId},
+                    {$set:
+                        {starCount:starCountUpd,
+                        feedBackGivenUsersCount:feedBackGivenUsersCountUpd,
+                        productRating:productRatingUpd
+                        }
+                    });
+            }
+            catch(e){
+                    res.status(200).send({message:e.message});
+            }
+    }
+    catch(e){
+        res.status(200).send({message:e.message});
+    }
+})
 productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
     let totalRecords;
     let group=req.params.productFamily.slice(0,1).toUpperCase()+req.params.productFamily.slice(1,req.params.productFamily.length);
