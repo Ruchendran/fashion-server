@@ -4,6 +4,9 @@ const path=require("path");
 const productModel=require("../Models/productModel.js");
 const orderModel=require("../Models/orderModel.js");
 
+productRoute.get("/hello",async(req,res,next)=>{
+    res.status(200).send({message:'Hello'})
+})
 productRoute.post("/upd/feedback",async(req,res,next)=>{
     try{
         const feedbackProductList=req.body.productsListPayload;
