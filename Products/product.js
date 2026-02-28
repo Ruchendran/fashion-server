@@ -3,7 +3,8 @@ const productRoute=express.Router();
 const path=require("path");
 const productModel=require("../Models/productModel.js");
 const orderModel=require("../Models/orderModel.js");
-productRoute.put("/upd-product/feedback",async(req,res,next)=>{
+
+productRoute.post("/upd/feedback",async(req,res,next)=>{
     try{
         const feedbackProductList=req.body.productsListPayload;
         // const orderId=req.body.orderId;
