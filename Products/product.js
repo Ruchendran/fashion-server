@@ -61,6 +61,7 @@ productRoute.post("/upd-product-feedback",async(req,res,next)=>{
         // console.log(req.body.userId,' sep  ',orderId)
         await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
         res.status(200).send({message:"Successfully feedback updated."})
+        console.log("successs")
     }
     catch(e){
         res.status(404).send({message:e.message});
