@@ -38,11 +38,11 @@ orderRoute.post("/append",async(req,res,next)=>{
             orderedProducts.push({
                 productName:product.productName,
                 productDes:product.productDes,
-                productImg:product.productImg,
-                productPrice:Number(product.productPrice),
-                productId:product.productId,
-                quantity:product.quantity,
-                userStarRating: setZero
+                // productImg:product.productImg,
+                // productPrice:Number(product.productPrice),
+                // productId:product.productId,
+                // quantity:product.quantity,
+                // userStarRating: setZero
             })
         });
         let appendObject={
