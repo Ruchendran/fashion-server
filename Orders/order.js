@@ -41,10 +41,7 @@ orderRoute.post("/append",async(req,res,next)=>{
                 productPrice:Number(product.productPrice),
                 productId:product.productId,
                 quantity:product.quantity,
-                // productRating:getProductDetails[0].productRating,
-                // starCount:getProductDetails[0].starCount,
-                // feedBackGivenUsersCount:getProductDetails[0].feedBackGivenUsersCount,
-                userStarRating:0
+                userStarRating:1
             })
         });
         let appendObject={
