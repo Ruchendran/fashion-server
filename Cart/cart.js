@@ -17,7 +17,7 @@ cartRoute.post("/save",async(req,res,next)=>{
             productName:getProductData.productName,
             productDes:getProductData.productDes,
             productImg:getProductData.productImg,
-            productPrice:getProductData.productPrice,
+            productPrice:Number(getProductData.productPrice),
             productId:getProductData._id,
             userId:req.body.userToken,
             quantity:req.body.quantity,

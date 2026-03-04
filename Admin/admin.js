@@ -6,7 +6,7 @@ const orderModel=require("../Models/orderModel.js");
 const cartModel=require("../Models/cartModel.js");
 const saveLaterModel=require("../Models/saveLaterModel.js");
 adminRoute.post("/upload",async(req,res,next)=>{
-    console.log(req.body,"data");
+    // console.log(req.body,"data");
     let appendObject={
         productName:req.body.prodName,
         productDes:req.body.prodDes,

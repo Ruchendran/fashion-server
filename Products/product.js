@@ -47,6 +47,11 @@ productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
     if(group == 'All'){
         totalRecords=await productModel.find({})
     }
+   else if(group == 'Groceries'){
+    totalRecords=await productModel.find({
+      productFamily:  {$regex:group,$options:'i'}
+   });
+   }
     else{
         totalRecords=await productModel.find({productFamily:group});
     }
@@ -75,6 +80,11 @@ productRoute.get("/:productFamily/:page",async(req,res,next)=>{
     if(group == 'All'){
         allProducts=await productModel.find({}).skip(skip).limit(limit);
     }
+    else if(group == 'Groceries'){
+        allProducts=await productModel.find({
+            productFamily:  {$regex:group,$options:'i'}
+        }).skip(skip).limit(limit);
+   }
     else{
         allProducts=await productModel.find({productFamily:group}).skip(skip).limit(limit);
     }

@@ -5,7 +5,7 @@ const cartDetails=mongoose.Schema({
     productName:String,
     productDes:String,
     productImg:String ,
-    productPrice:String,
+    productPrice:Number,
     productId:String,
     quantity:Number,
     productFamily:String,
