@@ -9,7 +9,8 @@ const cartDetails=mongoose.Schema({
     productId:String,
     quantity:Number,
     productFamily:String,
-    saveLater:Boolean
+    saveLater:Boolean,
+    isChecked:Boolean
 });
 const cartModel=mongoose.model('cart-details',cartDetails);
 module.exports=cartModel;

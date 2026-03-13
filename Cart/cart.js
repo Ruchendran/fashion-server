@@ -22,7 +22,8 @@ cartRoute.post("/save",async(req,res,next)=>{
             userId:req.body.userToken,
             quantity:req.body.quantity,
             productFamily:req.body.productFamily,
-            saveLater:getSaveLaterData ? true:false
+            saveLater:getSaveLaterData ? true:false,
+            isChecked:false
         }
         const saveToCart=await cartModel(appendObject);
         saveToCart.save();
@@ -96,5 +97,13 @@ cartRoute.put("/save-later-flag/upd",async(req,res,next)=>{
         message='Status Already Updated'
     }
     res.status(statusCode).send({message});
+})
+cartRoute.delete("/delete-all/:userId",async(req,res,next)=>{
+    const deleteAll=await cartModel.deleteMany({userId:req.params.userId});
+    if(deleteAll.acknowledged){
+        res.status(200).send({message:"Successfullly all products deleted!"});
+    }else{
+        res.status(409).send({message:"Cart details not found."});
+    }
 })
 module.exports=cartRoute;

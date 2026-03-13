@@ -84,5 +84,20 @@ saveLaterRoute.delete('/delete-product',async(req,res,next)=>{
         statusCode=200;
     }
     res.status(statusCode).send({message});
+});
+saveLaterRoute.delete('/delete-all/:userId',async(req,res,next)=>{
+    const deleteAllProduct=await saveLaterModel.deleteMany({userId:req.params.userId});
+    const setFalseAllInCart=await cartModel.updateMany({userId:req.params.userId},{$set:{saveLater:false}});
+    let message=''
+    let statusCode=''
+      if(deleteAllProduct.acknowledged && setFalseAllInCart.acknowledged){
+        message='Successfuly All products Deleted';
+        statusCode=200;
+    }
+    else{
+        message='Data Not Found';
+        statusCode=200;
+    }
+    res.status(statusCode).send({message});
 })
 module.exports=saveLaterRoute;
