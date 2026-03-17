@@ -1,10 +1,14 @@
 // const mongoose=require("mongoose");
 // const getStartDb=(async ()=>{
-//     mongoose.connect('mongodb://localhost:27017/products').then(()=>{
+//     try{
+//         await mongoose.connect('mongodb://localhost:27017/products')
 //         console.log("DB connected");
-//     }).catch((error)=>{
+//     }
+//     catch(error){
 //         console.log(`DB error: ${error}`);
-//     })
+//         process.exit(1);
+//     }
+
 // });
 // module.exports={getStartDb}; 
 
@@ -14,12 +18,14 @@
 
 const mongoose=require("mongoose");
 const getStartDb=(async ()=>{
-    mongoose.connect('mongodb+srv://chathruknasathvathu_db_user:CJUhJFLbNph6BM0z@cluster0.awuza5b.mongodb.net/',{
-    }).then(()=>{
+    try{
+        await mongoose.connect('mongodb+srv://chathruknasathvathu_db_user:CJUhJFLbNph6BM0z@cluster0.awuza5b.mongodb.net/',{});
         console.log("DB connected");
-    }).catch((error)=>{
+    }
+    catch(error){
         console.log(`DB error: ${error}`);
-    })
+        process.exit(1);
+    }
 });
 module.exports={getStartDb}; 
 
