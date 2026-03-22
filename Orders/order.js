@@ -24,16 +24,18 @@ orderRoute.post("/append",async(req,res,next)=>{
     let distance;
     let expectedDate;
     let routeCities
-    if(req.body.destinatonAddress.pincode!=517592){
-        routeCities=await GeoRouting(517592,req.body.destinatonAddress.pincode);
-        formatRoute=(routeCities.arrangedUniqLocation && routeCities.arrangedUniqLocation.length > 0)?[...routeCities.arrangedUniqLocation,req.body.destinatonAddress.village]:[req.body.destinatonAddress.village];
-        trackerMap=['Satrawada','Store',...formatRoute];
-        distance=Math.floor(routeCities.distance/1000);
-        expectedDate=routeCities.distance?Math.floor(distance/100):0;
-    }else{
-        trackerMap=['Store',req.body.destinatonAddress.village];   
-        expectedDate=0;
+    try{
+    routeCities=await GeoRouting(517592,req.body.destinatonAddress.pincode);
+    formatRoute=(routeCities.arrangedUniqLocation && routeCities.arrangedUniqLocation.length > 0)?[...routeCities.arrangedUniqLocation,req.body.destinatonAddress.village]:[req.body.destinatonAddress.village];
+    trackerMap=['Satrawada','Store',...formatRoute];
+    distance=Math.floor(routeCities.distance/1000);
+    expectedDate=routeCities.distance?Math.floor(distance/100):0;
     }
+    catch{
+            trackerMap=['Store',req.body.destinatonAddress.village];   
+    expectedDate=0;
+    }
+    
     
     calculateExpectedDate=(dayCount)=>{
         const date=new Date();
