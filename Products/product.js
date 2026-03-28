@@ -44,10 +44,11 @@ productRoute.post("/upd/feedback",async(req,res,next)=>{
 productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
     let totalRecords;
     let group=req.params.productFamily.slice(0,1).toUpperCase()+req.params.productFamily.slice(1,req.params.productFamily.length);
+    console.log(group)
     if(group == 'All'){
         totalRecords=await productModel.find({})
     }
-   else if(group == 'Groceries'){
+   else if(group == 'Groceries' || group == 'Wears'){
     totalRecords=await productModel.find({
       productFamily:  {$regex:group,$options:'i'}
    });
@@ -80,7 +81,7 @@ productRoute.get("/:productFamily/:page",async(req,res,next)=>{
     if(group == 'All'){
         allProducts=await productModel.find({}).skip(skip).limit(limit);
     }
-    else if(group == 'Groceries'){
+    else if(group == 'Groceries' || group == 'Wears'){
         allProducts=await productModel.find({
             productFamily:  {$regex:group,$options:'i'}
         }).skip(skip).limit(limit);
