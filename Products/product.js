@@ -44,7 +44,6 @@ productRoute.post("/upd/feedback",async(req,res,next)=>{
 productRoute.get("/totalRecords/:productFamily",async(req,res,next)=>{
     let totalRecords;
     let group=req.params.productFamily.slice(0,1).toUpperCase()+req.params.productFamily.slice(1,req.params.productFamily.length);
-    console.log(group)
     if(group == 'All'){
         totalRecords=await productModel.find({})
     }

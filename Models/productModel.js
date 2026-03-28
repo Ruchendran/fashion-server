@@ -9,7 +9,8 @@ const productDetails=mongoose.Schema({
     productRating:Number,
     starCount:Number,
     feedBackGivenUsersCount:Number,
-    userStarRating:Number
+    userStarRating:Number,
+    favourite:Boolean
 });
 
 const productModel=mongoose.model('product',productDetails);
