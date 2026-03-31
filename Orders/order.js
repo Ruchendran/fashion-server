@@ -26,7 +26,6 @@ orderRoute.post("/append",async(req,res,next)=>{
     let routeCities
     try{
     routeCities=await GeoRouting(517592,req.body.destinatonAddress.pincode);
-    console.log(routeCities,"all-cities")
     formatRoute=(routeCities.arrangedUniqLocation && routeCities.arrangedUniqLocation.length > 0)?[...routeCities.arrangedUniqLocation,req.body.destinatonAddress.village]:[req.body.destinatonAddress.village];
     trackerMap=['Satrawada','Store',...formatRoute];
     distance=Math.floor(routeCities.distance/1000);
