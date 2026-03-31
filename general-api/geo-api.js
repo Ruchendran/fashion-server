@@ -57,10 +57,10 @@ async function GeoRouting(startPincode, destinPincode) {
     }
     const deleteDup=new Set(cityNames)
     const arrangedUniqLocation=[...deleteDup];
-    if(arrangedUniqLocation.length == 1 && arrangedUniqLocation[0]){
-        return {arrangedUniqLocation:arrangedUniqLocation,distance:AllRoutes.distance}
+    if(arrangedUniqLocation.length == 1 && (arrangedUniqLocation[0] == undefined || arrangedUniqLocation[0] == null) ){
+         return {arrangedUniqLocation:null,distance:AllRoutes.distance}
     }else{
-        return {arrangedUniqLocation:null,distance:AllRoutes.distance}
+        return {arrangedUniqLocation:arrangedUniqLocation ?? null,distance:AllRoutes.distance}
     }
     
 };
