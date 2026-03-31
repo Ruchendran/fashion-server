@@ -57,8 +57,12 @@ async function GeoRouting(startPincode, destinPincode) {
     }
     const deleteDup=new Set(cityNames)
     const arrangedUniqLocation=[...deleteDup];
-    console.log(deleteDup,"locations",cityNames)
-    return {arrangedUniqLocation:arrangedUniqLocation ?? null,distance:AllRoutes.distance}
+    if(arrangedUniqLocation.length == 1 && arrangedUniqLocation[0]){
+        return {arrangedUniqLocation:arrangedUniqLocation,distance:AllRoutes.distance}
+    }else{
+        return {arrangedUniqLocation:null,distance:AllRoutes.distance}
+    }
+    
 };
 
 module.exports = { GeoRouting }
