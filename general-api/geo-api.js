@@ -44,20 +44,20 @@ async function GeoRouting(startPincode, destinPincode) {
     const AllRoutes = await getRoute(startData, endData);
     let routePoints = [];
     const cityNames = [];
-    console.log(AllRoutes,"routes")
+    // console.log(AllRoutes,"routes")
     if (AllRoutes.routeValues) {
 
         const frequentVal = Math.floor(AllRoutes.routeValues.length / 5);
         for (let i = 0; i < AllRoutes.routeValues.length; i = i + frequentVal) {
             routePoints.push(AllRoutes.routeValues[i])
         }
-         console.log(routePoints,"pints")
+        //  console.log(routePoints,"pints")
         routePoints = routePoints.reverse();
         for (let i = 0; i < routePoints.length; i++) {
             let cityName = await getCity(routePoints[i][0], routePoints[i][1]);
             cityNames.push(cityName);
         }
-         console.log(cityNames,"sss")
+        //  console.log(cityNames,"sss")
     }
     const deleteDup=new Set(cityNames)
     const arrangedUniqLocation=[...deleteDup];
