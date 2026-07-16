@@ -17,7 +17,8 @@ const orderRoute=require(path.join(__dirname,'Orders','order.js'));
 const chatbotRoute=require(path.join(__dirname,'Chatbot','chatbot.js'))
 const genericRoute=require(path.join(__dirname,'Generic','generic.js'));
 const saveLaterRoute = require(path.join(__dirname,'Save-Later','save-later.js'));
-const favouriteRoute=require(path.join(__dirname,'Favourites','favourites.js'))
+const favouriteRoute=require(path.join(__dirname,'Favourites','favourites.js'));
+const trendingRoute=require(path.join(__dirname,'Trending','trending.js'));
 index.use("/admin",adminRoute);
 index.use("/auth",registerRoute);
 index.use("/products",productRoute);
@@ -26,7 +27,8 @@ index.use("/order",orderRoute);
 index.use("/chatbot",chatbotRoute);
 index.use("/generic",genericRoute);
 index.use("/save-later",saveLaterRoute);
-index.use("/favourites",favouriteRoute)
+index.use("/favourites",favouriteRoute);
+index.use("/trending",trendingRoute)
 // const {GeoRouting}=require(path.join(__dirname,'general-api','geo-api.js'));
 // GeoRouting(517592,600020)
 db.getStartDb();

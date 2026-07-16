@@ -5,6 +5,7 @@ const registerModel=require("../Models/registerModel.js");
 const orderModel=require("../Models/orderModel.js");
 const cartModel=require("../Models/cartModel.js");
 const saveLaterModel=require("../Models/saveLaterModel.js");
+const trendingModel=require("../Models/trendingModel.js");
 adminRoute.post("/upload",async(req,res,next)=>{
     // console.log(req.body,"data");
     let appendObject={
@@ -46,5 +47,22 @@ adminRoute.get('/get-delivered-orders-list',async(req,res,next)=>{
 adminRoute.get('/get-un-delivered-orders-list',async(req,res,next)=>{
     const getOrdersList=await orderModel.find({delivered:false}).sort({orderTime:1});
     res.status(200).send(getOrdersList)
-})
+});
+adminRoute.post("/trending-upload",async(req,res,next)=>{
+      let appendObject={
+        productName:req.body.prodName,
+        productDes:req.body.prodDes,
+        productImg:req.body.prodImg,
+        productPrice:req.body.prodPrice,
+        productFamily:req.body.productFamily,
+        productRating:req.body.productRating,
+        starCount:0,
+        feedBackGivenUsersCount:0,
+        userStarRating:0,
+        discount:10
+    }
+    let trendingVal=await trendingModel(appendObject);
+    trendingVal.save();
+    res.send("Successfully added the trending product data ");
+});
 module.exports=adminRoute;
