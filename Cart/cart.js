@@ -5,12 +5,15 @@ const cartModel=require("../Models/cartModel.js");
 const saveLaterModel=require("../Models/saveLaterModel.js");
 cartRoute.post("/save",async(req,res,next)=>{
     const uniqueId=req.body._id;
-    const getProductData=await productModel.findOne({_id:uniqueId});
+    let getProductData=await productModel.findOne({_id:uniqueId});
     const getSaveLaterData=await saveLaterModel.findOne({productId:uniqueId});
     const idAvailOrNotInCart=await cartModel.findOne({productId:uniqueId,userId:req.body.userToken});
     let resObj={
         status:'',
         message:''
+    }
+    if(!getProductData){
+        getProductData=req.body;
     }
     if(!idAvailOrNotInCart){
         let appendObject={
