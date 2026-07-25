@@ -7,7 +7,6 @@ require('dotenv').config();
 // index.use(express.json());
 index.use(cors());
 index.use(express.json({ limit: "50mb" }));
-index.use(express.urlencoded({ limit: "50mb", extended: true }));
 const path=require("path");
 const adminRoute=require(path.join(__dirname,'Admin','admin.js'));
 const productModel=require("./Models/productModel.js");
