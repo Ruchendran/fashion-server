@@ -12,7 +12,9 @@ const orderModel=mongoose.Schema({
     trackerMap:Object,
     delivered:Boolean,
     expectedTime:String,
-    feedBack:Boolean
+    feedBack:Boolean,
+    transactionId:{type:String,required:false},
+    orderAmount:Number
 });
 const order=mongoose.model('order',orderModel);
 module.exports=order;

@@ -6,12 +6,13 @@ const registerModel=require("../Models/registerModel.js");
 const cartModel=require("../Models/cartModel.js");
 const {GeoRouting}=require("../general-api/geo-api.js");
 const productModel = require('../Models/productModel.js');
+const { scanPyment } = require('../Middlewares/upi-scanner.js');
 
 orderRoute.get("/order-count",async(req,res,next)=>{
     const orderNo=await orderModel.find({userId:req.query.userToken});
     res.status(200).send({orderCount:orderNo.length})
 })
-orderRoute.post("/append",async(req,res,next)=>{
+orderRoute.post("/append",scanPyment,async(req,res,next)=>{
     const date=new Date();
     date.setHours(date.getHours()+5);
     date.setMinutes(date.getMinutes()+30);
@@ -76,7 +77,9 @@ orderRoute.post("/append",async(req,res,next)=>{
             trackerMap:trackerMap,
             delivered:false,
             expectedTime:expectedDate == 0?'Today':calculateExpectedDate(expectedDate),
-            feedBack:false
+            feedBack:false,
+            transactionId:req.body.destinatonAddress.payOnDelivery=='Yes'?null:req.body.transactionId,
+            orderAmount : req.body.totalPrice
         };
         try{
             const saveToOrder=await orderModel(appendObject);

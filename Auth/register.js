@@ -6,6 +6,7 @@ const pasKey = process.env.pas_key || 'fashion';
 const resendMailKey=process.env.RESEND_MAIL_KEY
 const registerModel=require("../Models/registerModel");
 const jwtToken=require('jsonwebtoken');
+const { logninRateLimitMiddleware } = require("../Middlewares/rate-limit-middleware");
 registerRoute.post('/register',async(req,res,next)=>{
     let findUser= await registerModel.findOne({    
         userMail:req.body.userMail,
@@ -53,7 +54,7 @@ registerRoute.post('/register',async(req,res,next)=>{
         res.send(resObj);
     }
 });
-registerRoute.post("/login",async(req,res,next)=>{
+registerRoute.post("/login",logninRateLimitMiddleware,async(req,res,next)=>{
     const getUser=await registerModel.findOne({       
         userMail:req.body.userMail,
     })
