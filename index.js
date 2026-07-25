@@ -19,6 +19,8 @@ const genericRoute=require(path.join(__dirname,'Generic','generic.js'));
 const saveLaterRoute = require(path.join(__dirname,'Save-Later','save-later.js'));
 const favouriteRoute=require(path.join(__dirname,'Favourites','favourites.js'));
 const trendingRoute=require(path.join(__dirname,'Trending','trending.js'));
+index.use(express.json({ limit: "50mb" }));
+index.use(express.urlencoded({ limit: "50mb", extended: true }));
 index.use("/admin",adminRoute);
 index.use("/auth",registerRoute);
 index.use("/products",productRoute);
@@ -29,6 +31,7 @@ index.use("/generic",genericRoute);
 index.use("/save-later",saveLaterRoute);
 index.use("/favourites",favouriteRoute);
 index.use("/trending",trendingRoute)
+
 // const {GeoRouting}=require(path.join(__dirname,'general-api','geo-api.js'));
 // GeoRouting(517592,600020)
 db.getStartDb();
