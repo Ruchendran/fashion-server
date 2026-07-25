@@ -41,10 +41,10 @@ const scanPyment=async(req,res,next)=>{
     // payment wrong
     else{
         if(orderTotalAmount > payAmount){
-             res.status(400).send({message:`U have sent incorrect payment. ur total order amount is ${orderTotalAmount} but u sent oly ${payAmount}.this amount is pending ${orderTotalAmount - payAmount}`});
+             res.status(400).send({message:"U sent less than your order amount"});
         }
         else{
-            res.status(400).send({message:`u have more than orderAmount.ur order amount is ${orderTotalAmount} but u sent ${payAmount}.this much amount is more ${payAmount-orderTotalAmount}`})
+            res.status(400).send({message:"u sent moe than ur order amount"})
         }
     }
     worker.terminate();
