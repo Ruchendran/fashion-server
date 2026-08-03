@@ -113,7 +113,7 @@ orderRoute.get("/list/:userToken",async(req,res,next)=>{
         status:'',
         message:''
     }
-    let getOrderData=await orderModel.find({userId:req.params.userToken}).sort({orderTime:1});
+    let getOrderData=await orderModel.find({userId:req.params.userToken,feedBack:false}).sort({orderTime:1});
     if(getOrderData){
         resObj.status=200;
         resObj.message="All the proucts"
@@ -125,6 +125,23 @@ orderRoute.get("/list/:userToken",async(req,res,next)=>{
         res.send(resObj)
     }
 });
+orderRoute.get("/orders-history/:userToken",async(req,res,next)=>{
+    let resObj={
+        status:'',
+        message:''
+    }
+    let getOrderData=await orderModel.find({userId:req.params.userToken,feedBack:true}).sort({orderTime:1});
+    if(getOrderData){
+        resObj.status=200;
+        resObj.message="All the proucts"
+        res.send({...resObj,getOrderData});
+    }
+    else{
+        res.status=200;
+        res.message="Products are not available."
+        res.send(resObj)
+    }
+})
 orderRoute.post("/update-order-stage",async(req,res,next)=>{
     const orderId=req.body.orderId;
     const trackIndex=req.body.trackIndex;

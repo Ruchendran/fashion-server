@@ -26,9 +26,8 @@ productRoute.post("/upd/feedback",async(req,res,next)=>{
                  res.status(200).send({message:'pro'});
             }
         };
-        // console.log(req.body.userId,' sep  ',orderId)
         try{
-        await orderModel.deleteOne({userId:req.body.userId,_id:req.body.orderId});
+        await orderModel.updateOne({userId:req.body.userId,_id:req.body.orderId},{$set:{feedBack:true}});
         }
         catch(e){
             console.log(e.message)
