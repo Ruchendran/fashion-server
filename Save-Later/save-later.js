@@ -31,19 +31,18 @@ saveLaterRoute.get('/get-from-products-model',async(req,res,next)=>{
             $match: { userId: userToken }
         },
         {
+    $addFields: {
+        productId: {
+            $toObjectId: "$productId"
+        }
+    }
+},
+        {
         $lookup: {
                 from: 'products',
-                let: { localPid: "$productId" }, // Take the String productId from saveLater
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                // Convert String variable to ObjectId and compare to Product _id
-                                $eq: ["$_id", { $toObjectId: "$$localPid" }]
-                            }
-                        }
-                    }
-                ],
+         
+                localField: 'productId',
+                foreignField: '_id',
                 as: 'productInfo'
             }
         },
@@ -54,16 +53,13 @@ saveLaterRoute.get('/get-from-products-model',async(req,res,next)=>{
                 preserveNullAndEmptyArrays: true 
             }
         },
-        {
-        // 4. Promote productInfo to the top level and discard everything else
-        $replaceRoot: { newRoot: "$productInfo" }
-    }
+   
     ]);
     let statusCode;
     let resObj={};
     if(savedProducts){
         statusCode=200;
-        resObj.savedProducts=savedProducts;
+        resObj.savedProducts=JSON.parse(JSON.stringify(savedProducts));
     }else{
         statusCode=202;
         resObj.savedProducts=null;
