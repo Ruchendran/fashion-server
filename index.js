@@ -1,10 +1,17 @@
 const express=require("express");
 const db=require("./db.js")
-const index=express();
-const port =process.env.PORT || 3000;
+const index = express();
+const port = process.env.PORT || 3000;
 const cors=require("cors");
 require('dotenv').config();
-// index.use(express.json());
+///....below web push notification...///
+const webPush = require('web-push');
+webPush.setVapidDetails(
+    'mailto:vvruchendran141594@gmail.com',
+    'BEY0Or9DtpCvNK1GRFT-fkT0yVsylumaglhUTrjD5DJxJ7XsqIVz9oCiQJEP86JTk2oZx9hrLM7hE9tyuMiOCc4',
+    'SJIjHl2mUcJbVf32xrPu5BngtBYcOtCUEPGkp6gAc7Y'
+);
+///....above web push notification...///
 index.use(cors());
 index.use(express.json({ limit: "50mb" }));
 const path=require("path");

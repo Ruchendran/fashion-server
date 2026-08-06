@@ -4,7 +4,8 @@ const registerData=mongoose.Schema({
     password:String,
     phone:Number,
     userName:String,
-    address:Array
+    address:Array,
+    notificationSubscriptionDetails:Object
 })
 const registerModel=mongoose.model('registerUser',registerData);
 module.exports=registerModel;

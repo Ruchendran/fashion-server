@@ -7,6 +7,7 @@ const cartModel=require("../Models/cartModel.js");
 const {GeoRouting}=require("../general-api/geo-api.js");
 const productModel = require('../Models/productModel.js');
 const { scanPyment } = require('../Middlewares/upi-scanner.js');
+const webPush = require('web-push');
 
 orderRoute.get("/order-count",async(req,res,next)=>{
     const orderNo=await orderModel.find({userId:req.query.userToken});
@@ -152,6 +153,21 @@ orderRoute.post("/update-order-stage",async(req,res,next)=>{
     else{
         await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
     }
+    // web push send notification.
+    const getUsernotificationSubscriptionDetails = await registerModel.findOne({_id:getOrder.userId});
+    const payload = JSON.stringify({
+        title: "Hello!",
+        body: "This is a push notification.",
+        icon: "/icon.png",
+        url: "https://shopy-io.netlify.app/"
+    });
+    webPush.sendNotification(getUsernotificationSubscriptionDetails.notificationSubscriptionDetails,payload)
+    .then((response)=>{
+        console.log("notification sent",response);
+    }).catch((error)=>{
+        console.log(error);
+    })
+    // web push send notification.
     res.status(200).send({message:"SuccessFully updated"});
 });
 orderRoute.post("/specific-user-order",async(req,res,next)=>{

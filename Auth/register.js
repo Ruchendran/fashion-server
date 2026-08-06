@@ -19,7 +19,8 @@ registerRoute.post('/register',async(req,res,next)=>{
             password:jwtPas,
             phone:req.body.phone,
             userName:req.body.userName,
-            address:[]
+            address:[],
+            notificationSubscriptionDetails:req.body.subscription
         }
         let saveVal=new registerModel(saveObject);
         let saveUser=await saveVal.save();
