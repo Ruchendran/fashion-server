@@ -154,19 +154,25 @@ orderRoute.post("/update-order-stage",async(req,res,next)=>{
         await orderModel.updateOne({_id:orderId},{$set:{activeTrackingIndex:trackIndex}});
     }
     // web push send notification.
-    const getUsernotificationSubscriptionDetails = await registerModel.findOne({_id:getOrder.userId});
-    const payload = JSON.stringify({
-        title: "Hello!",
-        body: "This is a push notification.",
-        icon: "/icon.png",
-        url: "https://shopy-io.netlify.app/"
-    });
-    webPush.sendNotification(getUsernotificationSubscriptionDetails.notificationSubscriptionDetails,payload)
-    .then((response)=>{
-        console.log("notification sent",response);
-    }).catch((error)=>{
-        console.log(error);
-    })
+    try{
+        const getUsernotificationSubscriptionDetails = await registerModel.findOne({_id:getOrder.userId});
+        const payload = JSON.stringify({
+            title: "Shopy-io notifications",
+            body: "Your order has been updated to the next stage.",
+            icon: "/icon.png",
+            url: "https://shopy-io.netlify.app/"
+        });
+        webPush.sendNotification(getUsernotificationSubscriptionDetails.notificationSubscriptionDetails,payload)
+        .then((response)=>{
+            console.log("notification sent",response);
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    catch(error)
+    {
+        console.error("Error sending notification:", error);
+    }
     // web push send notification.
     res.status(200).send({message:"SuccessFully updated"});
 });
